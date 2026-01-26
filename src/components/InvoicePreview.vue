@@ -99,6 +99,10 @@
                 <span>Total</span>
                 <span>{{ formatCurrency(grandTotal) }}</span>
               </div>
+              <div v-if="settings.showConversion && formatConvertedCurrency(grandTotal)" class="preview-totals-row converted">
+                <span>≈ {{ settings.convertToCurrency }}</span>
+                <span>{{ formatConvertedCurrency(grandTotal) }}</span>
+              </div>
             </div>
           </div>
 
@@ -150,6 +154,7 @@ export default {
       hasPaymentInfo,
       calculateItemAmount,
       formatCurrency,
+      formatConvertedCurrency,
       formatDate
     } = useInvoice()
 
@@ -171,6 +176,7 @@ export default {
       hasPaymentInfo,
       calculateItemAmount,
       formatCurrency,
+      formatConvertedCurrency,
       formatDate,
       printInvoice
     }
