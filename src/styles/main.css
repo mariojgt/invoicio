@@ -26,6 +26,181 @@
   box-sizing: border-box;
 }
 
+/* PDF Template Styles */
+.pdf-template {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: -1;
+  width: 595px;
+}
+
+.pdf-page {
+  width: 595px;
+  height: 842px;
+  padding: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #333;
+  background: white;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pdf-logo-section {
+  flex: 1;
+}
+
+.pdf-logo {
+  max-width: 120px;
+  max-height: 50px;
+  object-fit: contain;
+}
+
+.pdf-title-section {
+  text-align: right;
+}
+
+.pdf-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.pdf-invoice-number {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.pdf-meta {
+  color: #666;
+  font-size: 10px;
+}
+
+.pdf-parties {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.pdf-party {
+  flex: 1;
+}
+
+.pdf-party-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 4px;
+  font-weight: bold;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 3px;
+}
+
+.pdf-party-name {
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 2px;
+  color: #111;
+}
+
+.pdf-party-detail {
+  color: #555;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.pdf-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.pdf-items-table th {
+  background: #f8f9fa;
+  padding: 6px 8px;
+  font-size: 8px;
+  text-transform: uppercase;
+  color: #555;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+.pdf-items-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 10px;
+}
+
+.pdf-totals {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.pdf-totals-table {
+  width: 180px;
+}
+
+.pdf-totals-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 10px;
+  color: #666;
+}
+
+.pdf-total-final {
+  border-top: 2px solid #333;
+  margin-top: 6px;
+  padding-top: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.pdf-payment {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.pdf-payment-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.pdf-payment-detail {
+  color: #444;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.pdf-notes {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  font-size: 9px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.pdf-notes strong {
+  color: #444;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background: var(--gray-100);
@@ -775,6 +950,168 @@ body {
 .btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* PDF Export Styles - Applied when generating PDF */
+.preview-invoice.pdf-export {
+  padding: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #1f2937;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pdf-export .preview-invoice-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pdf-export .preview-logo {
+  max-width: 150px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.pdf-export .preview-invoice-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.pdf-export .preview-invoice-meta {
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.8;
+}
+
+.pdf-export .preview-invoice-meta div {
+  margin-bottom: 2px;
+}
+
+.pdf-export .preview-parties {
+  margin-bottom: 30px;
+  gap: 40px;
+}
+
+.pdf-export .preview-party h4 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7280;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 5px;
+}
+
+.pdf-export .preview-party-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 5px;
+}
+
+.pdf-export .preview-party div {
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.pdf-export .preview-items-table {
+  margin-bottom: 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pdf-export .preview-items-table th {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #374151;
+  background: #f9fafb;
+  padding: 12px 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pdf-export .preview-items-table td {
+  font-size: 13px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #1f2937;
+}
+
+.pdf-export .preview-items-table tr:last-child td {
+  border-bottom: none;
+}
+
+.pdf-export .preview-totals {
+  margin-bottom: 30px;
+}
+
+.pdf-export .preview-totals-table {
+  width: 220px;
+  background: #f9fafb;
+  padding: 15px 20px;
+  border-radius: 8px;
+}
+
+.pdf-export .preview-totals-row {
+  font-size: 13px;
+  padding: 8px 0;
+  color: #4b5563;
+}
+
+.pdf-export .preview-totals-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  border-top: 2px solid #d1d5db;
+  margin-top: 10px;
+  padding-top: 12px;
+}
+
+.pdf-export .preview-payment {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.pdf-export .preview-payment h4 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.pdf-export .preview-payment div {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.pdf-export .preview-notes {
+  font-size: 12px;
+  color: #6b7280;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  line-height: 1.6;
+}
+
+.pdf-export .preview-notes strong {
+  color: #374151;
 }
 
 /* Custom Scrollbar */
