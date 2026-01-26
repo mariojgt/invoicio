@@ -5,15 +5,15 @@
       <div style="display: flex; align-items: center; gap: 0.75rem;">
         <label style="font-size: 0.875rem; color: var(--gray-600);">Tax Mode:</label>
         <div class="tax-mode-toggle">
-          <button 
-            class="tax-mode-btn" 
+          <button
+            class="tax-mode-btn"
             :class="{ active: settings.taxMode === 'per-item' }"
             @click="settings.taxMode = 'per-item'"
           >
             Per Item
           </button>
-          <button 
-            class="tax-mode-btn" 
+          <button
+            class="tax-mode-btn"
             :class="{ active: settings.taxMode === 'total' }"
             @click="settings.taxMode = 'total'"
           >
@@ -80,12 +80,12 @@
         </div>
         <div v-if="settings.taxMode === 'total'" class="totals-row tax">
           <span class="totals-label">
-            Tax 
-            <input 
-              type="number" 
+            Tax
+            <input
+              type="number"
               style="width: 50px; padding: 2px 4px; font-size: 0.75rem; border: 1px solid var(--gray-300); border-radius: 4px;"
-              v-model.number="settings.globalTaxRate" 
-              min="0" 
+              v-model.number="settings.globalTaxRate"
+              min="0"
               step="0.01"
             >%
           </span>
@@ -98,11 +98,11 @@
         <div v-if="settings.showDiscount" class="totals-row">
           <span class="totals-label">
             Discount
-            <input 
-              type="number" 
+            <input
+              type="number"
               style="width: 50px; padding: 2px 4px; font-size: 0.75rem; border: 1px solid var(--gray-300); border-radius: 4px;"
-              v-model.number="invoice.discountPercent" 
-              min="0" 
+              v-model.number="invoice.discountPercent"
+              min="0"
               step="0.01"
             >%
           </span>
@@ -123,17 +123,17 @@ import { useInvoice } from '../composables/useInvoice'
 export default {
   name: 'InvoiceItems',
   setup() {
-    const { 
-      invoice, 
-      settings, 
-      subtotal, 
-      totalTax, 
-      discountAmount, 
+    const {
+      invoice,
+      settings,
+      subtotal,
+      totalTax,
+      discountAmount,
       grandTotal,
-      calculateItemAmount, 
-      formatCurrency, 
-      addItem, 
-      removeItem 
+      calculateItemAmount,
+      formatCurrency,
+      addItem,
+      removeItem
     } = useInvoice()
 
     return {

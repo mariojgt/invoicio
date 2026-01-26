@@ -18,10 +18,10 @@
               <span>Upload</span>
             </div>
           </div>
-          <input 
+          <input
             ref="logoInput"
-            type="file" 
-            accept="image/*" 
+            type="file"
+            accept="image/*"
             class="hidden-input"
             @change="handleLogoUpload"
           >

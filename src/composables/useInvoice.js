@@ -49,7 +49,7 @@ export function useInvoice() {
   const loadFromStorage = () => {
     const savedInvoice = localStorage.getItem('invoicio-invoice')
     const savedSettings = localStorage.getItem('invoicio-settings')
-    
+
     if (savedInvoice) {
       Object.assign(invoice, JSON.parse(savedInvoice))
     }
@@ -124,7 +124,7 @@ export function useInvoice() {
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const year = date.getFullYear()
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    
+
     switch (settings.dateFormat) {
       case 'DD/MM/YYYY':
         return `${day}/${month}/${year}`

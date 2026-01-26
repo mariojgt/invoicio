@@ -108,19 +108,19 @@ import { useInvoice } from '../composables/useInvoice'
 export default {
   name: 'PdfTemplate',
   setup() {
-    const { 
-      invoice, 
-      settings, 
-      subtotal, 
-      totalTax, 
-      discountAmount, 
-      grandTotal, 
+    const {
+      invoice,
+      settings,
+      subtotal,
+      totalTax,
+      discountAmount,
+      grandTotal,
       hasPaymentInfo,
-      calculateItemAmount, 
-      formatCurrency, 
-      formatDate 
+      calculateItemAmount,
+      formatCurrency,
+      formatDate
     } = useInvoice()
-    
+
     const pdfRef = ref(null)
 
     return {

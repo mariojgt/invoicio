@@ -139,20 +139,20 @@ export default {
   name: 'InvoicePreview',
   emits: ['export-pdf'],
   setup() {
-    const { 
-      invoice, 
-      settings, 
+    const {
+      invoice,
+      settings,
       isGeneratingPDF,
-      subtotal, 
-      totalTax, 
-      discountAmount, 
-      grandTotal, 
+      subtotal,
+      totalTax,
+      discountAmount,
+      grandTotal,
       hasPaymentInfo,
-      calculateItemAmount, 
-      formatCurrency, 
-      formatDate 
+      calculateItemAmount,
+      formatCurrency,
+      formatDate
     } = useInvoice()
-    
+
     const invoiceRef = ref(null)
 
     const printInvoice = () => {

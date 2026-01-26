@@ -18,8 +18,8 @@
           <div class="form-group">
             <label class="form-label">Invoice Template</label>
             <div class="template-grid">
-              <div 
-                class="template-option" 
+              <div
+                class="template-option"
                 :class="{ active: settings.template === 'classic' }"
                 @click="settings.template = 'classic'"
               >
@@ -30,8 +30,8 @@
                 </div>
                 <span>Classic</span>
               </div>
-              <div 
-                class="template-option" 
+              <div
+                class="template-option"
                 :class="{ active: settings.template === 'modern' }"
                 @click="settings.template = 'modern'"
               >
@@ -42,8 +42,8 @@
                 </div>
                 <span>Modern</span>
               </div>
-              <div 
-                class="template-option" 
+              <div
+                class="template-option"
                 :class="{ active: settings.template === 'minimal' }"
                 @click="settings.template = 'minimal'"
               >
@@ -54,8 +54,8 @@
                 </div>
                 <span>Minimal</span>
               </div>
-              <div 
-                class="template-option" 
+              <div
+                class="template-option"
                 :class="{ active: settings.template === 'bold' }"
                 @click="settings.template = 'bold'"
               >
@@ -105,15 +105,15 @@
           <div class="form-group">
             <label class="form-label">Tax Mode</label>
             <div class="tax-mode-toggle">
-              <button 
-                class="tax-mode-btn" 
+              <button
+                class="tax-mode-btn"
                 :class="{ active: settings.taxMode === 'per-item' }"
                 @click="settings.taxMode = 'per-item'"
               >
                 Per Item
               </button>
-              <button 
-                class="tax-mode-btn" 
+              <button
+                class="tax-mode-btn"
                 :class="{ active: settings.taxMode === 'total' }"
                 @click="settings.taxMode = 'total'"
               >
@@ -176,7 +176,7 @@ export default {
   emits: ['close', 'export-settings', 'import-settings'],
   setup() {
     const { settings, resetAll } = useInvoice()
-    
+
     return {
       settings,
       resetAll

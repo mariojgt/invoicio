@@ -3,7 +3,6 @@
 A simple, browser-based invoice builder created with Vue.js. Create professional invoices, customize settings, and export everything as JSON.
 
 ## Features
-
 - 📝 **Complete Invoice Creation** - Add invoice number, dates, sender/recipient details
 - 📦 **Line Items** - Add multiple items with description, quantity, price, and tax
 - 🧮 **Automatic Calculations** - Subtotal, tax, discount, and grand total calculated automatically

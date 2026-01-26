@@ -1156,7 +1156,7 @@ body {
   .invoice-layout {
     grid-template-columns: 1fr;
   }
-  
+
   .invoice-preview-panel {
     position: static;
     order: -1;
@@ -1167,22 +1167,22 @@ body {
   .header {
     padding: 1rem;
   }
-  
+
   .main-content {
     padding: 1rem;
   }
-  
+
   .form-row-2,
   .form-row-3,
   .form-row-4 {
     grid-template-columns: 1fr;
   }
-  
+
   .items-table {
     display: block;
     overflow-x: auto;
   }
-  
+
   .settings-panel {
     width: 100%;
   }
@@ -1198,15 +1198,15 @@ body {
   .btn {
     display: none !important;
   }
-  
+
   .invoice-layout {
     display: block;
   }
-  
+
   .preview-card {
     box-shadow: none;
   }
-  
+
   .preview-content {
     max-height: none;
     padding: 0;
