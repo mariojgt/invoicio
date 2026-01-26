@@ -16,6 +16,59 @@
         <div class="settings-section">
           <h4 class="settings-section-title">Appearance</h4>
           <div class="form-group">
+            <label class="form-label">Invoice Template</label>
+            <div class="template-grid">
+              <div 
+                class="template-option" 
+                :class="{ active: settings.template === 'classic' }"
+                @click="settings.template = 'classic'"
+              >
+                <div class="template-preview template-preview-classic">
+                  <div class="tp-header"></div>
+                  <div class="tp-body"></div>
+                  <div class="tp-table"></div>
+                </div>
+                <span>Classic</span>
+              </div>
+              <div 
+                class="template-option" 
+                :class="{ active: settings.template === 'modern' }"
+                @click="settings.template = 'modern'"
+              >
+                <div class="template-preview template-preview-modern">
+                  <div class="tp-header"></div>
+                  <div class="tp-body"></div>
+                  <div class="tp-table"></div>
+                </div>
+                <span>Modern</span>
+              </div>
+              <div 
+                class="template-option" 
+                :class="{ active: settings.template === 'minimal' }"
+                @click="settings.template = 'minimal'"
+              >
+                <div class="template-preview template-preview-minimal">
+                  <div class="tp-header"></div>
+                  <div class="tp-body"></div>
+                  <div class="tp-table"></div>
+                </div>
+                <span>Minimal</span>
+              </div>
+              <div 
+                class="template-option" 
+                :class="{ active: settings.template === 'bold' }"
+                @click="settings.template = 'bold'"
+              >
+                <div class="template-preview template-preview-bold">
+                  <div class="tp-header"></div>
+                  <div class="tp-body"></div>
+                  <div class="tp-table"></div>
+                </div>
+                <span>Bold</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="form-label">Accent Color</label>
             <div class="color-picker-group">
               <input type="color" class="color-picker" v-model="settings.accentColor">

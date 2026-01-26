@@ -25,8 +25,8 @@
           </button>
         </div>
       </div>
-      <div class="preview-content">
-        <div ref="invoiceRef" class="preview-invoice" :style="{ '--accent-color': settings.accentColor }">
+      <div class="preview-content" :class="'preview-template-' + settings.template">
+        <div ref="invoiceRef" class="preview-invoice" :style="{ '--accent-color': settings.accentColor, '--accent': settings.accentColor }">
           <!-- Invoice Header -->
           <div class="preview-invoice-header">
             <div>

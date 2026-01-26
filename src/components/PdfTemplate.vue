@@ -1,6 +1,6 @@
 <template>
-  <div ref="pdfRef" class="pdf-template">
-    <div class="pdf-page">
+  <div ref="pdfRef" class="pdf-template" :class="'template-' + settings.template">
+    <div class="pdf-page" :style="{ '--accent': settings.accentColor }">
       <!-- Header -->
       <div class="pdf-header">
         <div class="pdf-logo-section">

@@ -38,7 +38,8 @@ const settings = reactive({
   taxMode: 'per-item',
   globalTaxRate: 10,
   defaultItemTax: 0,
-  showDiscount: false
+  showDiscount: false,
+  template: 'classic'
 })
 
 const isGeneratingPDF = ref(false)

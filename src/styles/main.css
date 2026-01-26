@@ -201,6 +201,226 @@
   color: #444;
 }
 
+/* ===========================================
+   TEMPLATE VARIATIONS
+   =========================================== */
+
+/* MODERN TEMPLATE */
+.template-modern .pdf-page {
+  padding: 0;
+}
+
+.template-modern .pdf-header {
+  background: var(--accent, #4f46e5);
+  color: white;
+  padding: 30px 40px;
+  margin-bottom: 25px;
+  border-bottom: none;
+}
+
+.template-modern .pdf-title {
+  color: white !important;
+}
+
+.template-modern .pdf-invoice-number,
+.template-modern .pdf-meta {
+  color: rgba(255,255,255,0.9);
+}
+
+.template-modern .pdf-parties,
+.template-modern .pdf-items-table,
+.template-modern .pdf-totals,
+.template-modern .pdf-payment,
+.template-modern .pdf-notes {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.template-modern .pdf-items-table th {
+  background: var(--accent, #4f46e5);
+  color: white;
+}
+
+.template-modern .pdf-total-final {
+  color: var(--accent, #4f46e5) !important;
+}
+
+/* MINIMAL TEMPLATE */
+.template-minimal .pdf-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.template-minimal .pdf-title {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 4px;
+}
+
+.template-minimal .pdf-party-label {
+  border-bottom: none;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.template-minimal .pdf-items-table th {
+  background: transparent;
+  border-bottom: 1px solid #ddd;
+  font-weight: 400;
+}
+
+.template-minimal .pdf-items-table td {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.template-minimal .pdf-payment {
+  background: transparent;
+  border-top: 1px solid #eee;
+  border-radius: 0;
+  padding: 10px 0;
+}
+
+.template-minimal .pdf-total-final {
+  border-top: 1px solid #333;
+}
+
+/* BOLD TEMPLATE */
+.template-bold .pdf-page {
+  border: 3px solid var(--accent, #4f46e5);
+  padding: 35px;
+}
+
+.template-bold .pdf-header {
+  border-bottom: 3px solid var(--accent, #4f46e5);
+  padding-bottom: 20px;
+}
+
+.template-bold .pdf-title {
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.template-bold .pdf-party-label {
+  background: var(--accent, #4f46e5);
+  color: white;
+  padding: 4px 8px;
+  border-bottom: none;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.template-bold .pdf-items-table {
+  border: 2px solid #333;
+}
+
+.template-bold .pdf-items-table th {
+  background: #333;
+  color: white;
+  border-bottom: none;
+}
+
+.template-bold .pdf-items-table td {
+  border-bottom: 1px solid #ddd;
+}
+
+.template-bold .pdf-totals-table {
+  border: 2px solid var(--accent, #4f46e5);
+  padding: 10px;
+}
+
+.template-bold .pdf-total-final {
+  border-top: 3px solid var(--accent, #4f46e5);
+}
+
+/* Template Selector Styles */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.template-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.template-option:hover {
+  border-color: var(--gray-400);
+}
+
+.template-option.active {
+  border-color: var(--primary);
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.template-option span {
+  font-size: 11px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.template-preview {
+  width: 60px;
+  height: 75px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tp-header {
+  height: 12px;
+  background: #eee;
+  border-radius: 2px;
+}
+
+.tp-body {
+  height: 15px;
+  background: #f5f5f5;
+  border-radius: 2px;
+}
+
+.tp-table {
+  flex: 1;
+  background: #fafafa;
+  border-radius: 2px;
+}
+
+.template-preview-modern {
+  border-top: 4px solid var(--primary);
+}
+
+.template-preview-modern .tp-header {
+  background: var(--primary);
+}
+
+.template-preview-minimal .tp-header,
+.template-preview-minimal .tp-body,
+.template-preview-minimal .tp-table {
+  background: transparent;
+  border: 1px solid #eee;
+}
+
+.template-preview-bold {
+  border: 2px solid #333;
+}
+
+.template-preview-bold .tp-header {
+  background: #333;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background: var(--gray-100);
@@ -715,6 +935,78 @@ body {
   color: var(--gray-500);
   border-top: 1px solid var(--gray-200);
   padding-top: 1rem;
+}
+
+/* Preview Template Variations */
+.preview-template-modern .preview-invoice {
+  padding: 0;
+}
+
+.preview-template-modern .preview-invoice-header {
+  background: var(--accent, #4f46e5);
+  color: white;
+  padding: 1rem;
+  margin: 0 0 1rem 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.preview-template-modern .preview-invoice-title h2 {
+  color: white !important;
+}
+
+.preview-template-modern .preview-invoice-meta {
+  color: rgba(255,255,255,0.85);
+}
+
+.preview-template-modern .preview-items-table th {
+  background: var(--accent, #4f46e5);
+  color: white;
+  border-bottom: none;
+}
+
+.preview-template-minimal .preview-invoice-title h2 {
+  font-weight: 300;
+  letter-spacing: 3px;
+  font-size: 1.25rem;
+}
+
+.preview-template-minimal .preview-items-table th {
+  background: transparent;
+  border-bottom: 1px solid #ddd;
+}
+
+.preview-template-minimal .preview-payment {
+  background: transparent;
+  border-top: 1px solid #eee;
+  padding: 1rem 0;
+  border-radius: 0;
+}
+
+.preview-template-bold .preview-invoice {
+  border: 3px solid var(--accent, #4f46e5);
+  padding: 1rem;
+}
+
+.preview-template-bold .preview-invoice-header {
+  border-bottom: 3px solid var(--accent, #4f46e5);
+  padding-bottom: 1rem;
+}
+
+.preview-template-bold .preview-invoice-title h2 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.preview-template-bold .preview-party h4 {
+  background: var(--accent, #4f46e5);
+  color: white;
+  padding: 2px 6px;
+  display: inline-block;
+}
+
+.preview-template-bold .preview-items-table th {
+  background: #333;
+  color: white;
 }
 
 /* Settings Panel */
