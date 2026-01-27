@@ -10,6 +10,31 @@
       </a>
     </div>
     <nav class="header-actions" role="navigation" aria-label="Main actions">
+      <button class="btn btn-secondary" @click="$emit('open-clients')" aria-label="Open client database">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Clients
+      </button>
+      <button class="btn btn-secondary" @click="$emit('open-catalog')" aria-label="Open item catalog">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        Catalog
+      </button>
+      <button class="btn btn-secondary" @click="$emit('open-history')" aria-label="Open saved invoices">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        Invoices
+      </button>
       <button class="btn btn-secondary" @click="$emit('load')" aria-label="Load invoice from file">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -40,6 +65,6 @@
 <script>
 export default {
   name: 'AppHeader',
-  emits: ['load', 'save', 'toggle-settings']
+  emits: ['load', 'save', 'toggle-settings', 'open-clients', 'open-catalog', 'open-history']
 }
 </script>

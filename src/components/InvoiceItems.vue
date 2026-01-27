@@ -1,7 +1,15 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Items</h3>
+      <div class="card-title-row">
+        <h3 class="card-title">Items</h3>
+        <button class="btn btn-secondary btn-sm" @click="$emit('open-catalog')" title="Browse item catalog">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          Catalog
+        </button>
+      </div>
       <div style="display: flex; align-items: center; gap: 0.75rem;">
         <label style="font-size: 0.875rem; color: var(--gray-600);">Tax Mode:</label>
         <div class="tax-mode-toggle">
@@ -51,12 +59,26 @@
             <div class="item-amount">{{ formatCurrency(calculateItemAmount(item)) }}</div>
           </td>
           <td>
-            <button class="btn btn-icon btn-danger btn-sm" @click="removeItem(index)" v-if="invoice.items.length > 1">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              </svg>
-            </button>
+            <div class="row-actions">
+              <button 
+                class="btn btn-icon btn-sm" 
+                @click="saveItemToCatalog(index)" 
+                :disabled="!item.description"
+                title="Save to catalog"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
+              </button>
+              <button class="btn btn-icon btn-danger btn-sm" @click="removeItem(index)" v-if="invoice.items.length > 1">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -114,14 +136,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Notification Toast -->
+    <div v-if="notification" class="item-notification">
+      {{ notification }}
+    </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useInvoice } from '../composables/useInvoice'
 
 export default {
   name: 'InvoiceItems',
+  emits: ['open-catalog'],
   setup() {
     const {
       invoice,
@@ -133,8 +162,25 @@ export default {
       calculateItemAmount,
       formatCurrency,
       addItem,
-      removeItem
+      removeItem,
+      saveInvoiceItemToCatalog
     } = useInvoice()
+
+    const notification = ref(null)
+
+    const showNotification = (message) => {
+      notification.value = message
+      setTimeout(() => {
+        notification.value = null
+      }, 2000)
+    }
+
+    const saveItemToCatalog = (index) => {
+      const result = saveInvoiceItemToCatalog(index)
+      if (result) {
+        showNotification('Item saved to catalog!')
+      }
+    }
 
     return {
       invoice,
@@ -146,8 +192,48 @@ export default {
       calculateItemAmount,
       formatCurrency,
       addItem,
-      removeItem
+      removeItem,
+      saveItemToCatalog,
+      notification
     }
   }
 }
 </script>
+
+<style scoped>
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.item-notification {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: var(--gray-800);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  z-index: 1000;
+  animation: slideUpNotif 0.2s ease;
+}
+
+@keyframes slideUpNotif {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+</style>

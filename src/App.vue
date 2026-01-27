@@ -4,14 +4,17 @@
       @load="loadInvoice"
       @save="saveInvoice"
       @toggle-settings="toggleSettings"
+      @open-clients="showClientDatabase = true"
+      @open-catalog="showItemCatalog = true"
+      @open-history="showInvoiceHistory = true"
     />
 
     <main class="main-content">
       <div class="invoice-layout">
         <div class="invoice-builder">
           <InvoiceDetails />
-          <InvoiceParties />
-          <InvoiceItems />
+          <InvoiceParties @open-clients="showClientDatabase = true" />
+          <InvoiceItems @open-catalog="showItemCatalog = true" />
           <InvoicePayment />
         </div>
 
@@ -24,6 +27,21 @@
       @close="toggleSettings"
       @export-settings="exportSettings"
       @import-settings="triggerImportSettings"
+    />
+
+    <ClientDatabase
+      :isOpen="showClientDatabase"
+      @close="showClientDatabase = false"
+    />
+
+    <ItemCatalog
+      :isOpen="showItemCatalog"
+      @close="showItemCatalog = false"
+    />
+
+    <InvoiceHistory
+      :isOpen="showInvoiceHistory"
+      @close="showInvoiceHistory = false"
     />
 
     <PdfTemplate ref="pdfTemplateRef" />
@@ -60,6 +78,9 @@ import InvoiceItems from './components/InvoiceItems.vue'
 import InvoicePayment from './components/InvoicePayment.vue'
 import InvoicePreview from './components/InvoicePreview.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
+import ClientDatabase from './components/ClientDatabase.vue'
+import ItemCatalog from './components/ItemCatalog.vue'
+import InvoiceHistory from './components/InvoiceHistory.vue'
 import PdfTemplate from './components/PdfTemplate.vue'
 
 export default {
@@ -73,12 +94,18 @@ export default {
     InvoicePayment,
     InvoicePreview,
     SettingsPanel,
+    ClientDatabase,
+    ItemCatalog,
+    InvoiceHistory,
     PdfTemplate
   },
   setup() {
     const { invoice, settings, isGeneratingPDF, loadFromStorage, setupAutoSave } = useInvoice()
 
     const showSettings = ref(false)
+    const showClientDatabase = ref(false)
+    const showItemCatalog = ref(false)
+    const showInvoiceHistory = ref(false)
     const loadInput = ref(null)
     const settingsInput = ref(null)
     const pdfTemplateRef = ref(null)
@@ -244,6 +271,9 @@ export default {
 
     return {
       showSettings,
+      showClientDatabase,
+      showItemCatalog,
+      showInvoiceHistory,
       loadInput,
       settingsInput,
       pdfTemplateRef,
