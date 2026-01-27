@@ -43,6 +43,19 @@
         <input type="date" class="form-input" v-model="invoice.dueDate">
       </div>
     </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <div class="status-selector">
+        <select v-model="invoice.status" class="form-input status-select" :style="{ borderColor: invoiceStatuses[invoice.status]?.color }">
+          <option v-for="(statusInfo, statusKey) in invoiceStatuses" :key="statusKey" :value="statusKey">
+            {{ statusInfo.label }}
+          </option>
+        </select>
+        <span class="status-badge" :style="{ backgroundColor: invoiceStatuses[invoice.status]?.color }">
+          {{ invoiceStatuses[invoice.status]?.label }}
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,7 +66,7 @@ import { useInvoice } from '../composables/useInvoice'
 export default {
   name: 'InvoiceDetails',
   setup() {
-    const { invoice } = useInvoice()
+    const { invoice, invoiceStatuses } = useInvoice()
     const logoInput = ref(null)
 
     const triggerLogoUpload = () => {
@@ -78,6 +91,7 @@ export default {
 
     return {
       invoice,
+      invoiceStatuses,
       logoInput,
       triggerLogoUpload,
       handleLogoUpload,

@@ -119,9 +119,26 @@
                   <div class="invoice-details">
                     <div class="invoice-total">{{ formatAmount(inv.total, inv.currency) }}</div>
                     <div class="invoice-date">{{ formatDate(inv.createdAt) }}</div>
+                    <span 
+                      class="status-badge status-badge-sm" 
+                      :style="{ backgroundColor: invoiceStatuses[inv.status || 'draft']?.color }"
+                    >
+                      {{ invoiceStatuses[inv.status || 'draft']?.label }}
+                    </span>
                   </div>
                 </div>
                 <div class="invoice-card-actions" @click.stop>
+                  <select 
+                    class="status-dropdown" 
+                    :value="inv.status || 'draft'" 
+                    @change="changeStatus(inv.id, $event.target.value)"
+                    @click.stop
+                    title="Change status"
+                  >
+                    <option v-for="(statusInfo, statusKey) in invoiceStatuses" :key="statusKey" :value="statusKey">
+                      {{ statusInfo.label }}
+                    </option>
+                  </select>
                   <button 
                     v-if="editingId === inv.id"
                     class="btn btn-icon btn-sm btn-success" 
@@ -238,7 +255,9 @@ export default {
       duplicateSavedInvoice,
       exportSavedInvoices,
       importSavedInvoices,
-      currencies
+      currencies,
+      invoiceStatuses,
+      updateSavedInvoiceStatus
     } = useInvoice()
 
     const searchQuery = ref('')
@@ -387,8 +406,14 @@ export default {
       pendingImportData.value = null
     }
 
+    const changeStatus = (invoiceId, newStatus) => {
+      updateSavedInvoiceStatus(invoiceId, newStatus)
+      showNotification(`Status updated to ${invoiceStatuses[newStatus]?.label}`)
+    }
+
     return {
       savedInvoices,
+      invoiceStatuses,
       searchQuery,
       notification,
       showImportOptions,
@@ -415,7 +440,8 @@ export default {
       handleImportFile,
       doImport,
       cancelImport,
-      exportSavedInvoices
+      exportSavedInvoices,
+      changeStatus
     }
   }
 }

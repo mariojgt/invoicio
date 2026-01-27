@@ -5,6 +5,7 @@ const invoice = reactive({
   number: 'INV-001',
   date: new Date().toISOString().split('T')[0],
   dueDate: '',
+  status: 'draft',
   logo: '',
   from: {
     name: '',
@@ -116,6 +117,15 @@ const currencies = {
   NZD: { symbol: 'NZ$', name: 'New Zealand Dollar' },
   ZAR: { symbol: 'R', name: 'South African Rand' },
   PLN: { symbol: 'zł', name: 'Polish Zloty' }
+}
+
+// Invoice Status Options
+const invoiceStatuses = {
+  draft: { label: 'Draft', color: '#6b7280' },
+  sent: { label: 'Sent', color: '#3b82f6' },
+  paid: { label: 'Paid', color: '#10b981' },
+  overdue: { label: 'Overdue', color: '#ef4444' },
+  cancelled: { label: 'Cancelled', color: '#9ca3af' }
 }
 
 export function useInvoice() {
@@ -441,6 +451,8 @@ export function useInvoice() {
       clientName: invoice.to.name || 'Unknown Client',
       total: grandTotal.value,
       currency: settings.currency,
+      status: invoice.status || 'draft',
+      dueDate: invoice.dueDate,
       data: JSON.parse(JSON.stringify(invoice))
     }
     savedInvoices.value.unshift(newSavedInvoice)
@@ -466,7 +478,21 @@ export function useInvoice() {
         clientName: invoice.to.name || 'Unknown Client',
         total: grandTotal.value,
         currency: settings.currency,
+        status: invoice.status || 'draft',
+        dueDate: invoice.dueDate,
         data: JSON.parse(JSON.stringify(invoice))
+      }
+      return true
+    }
+    return false
+  }
+
+  const updateSavedInvoiceStatus = (id, newStatus) => {
+    const index = savedInvoices.value.findIndex(inv => inv.id === id)
+    if (index !== -1) {
+      savedInvoices.value[index].status = newStatus
+      if (savedInvoices.value[index].data) {
+        savedInvoices.value[index].data.status = newStatus
       }
       return true
     }
@@ -559,6 +585,7 @@ export function useInvoice() {
     invoice.number = 'INV-001'
     invoice.date = new Date().toISOString().split('T')[0]
     invoice.dueDate = ''
+    invoice.status = 'draft'
     invoice.logo = ''
     invoice.from.name = ''
     invoice.from.email = ''
@@ -905,6 +932,87 @@ export function useInvoice() {
     }
   }
 
+  // Unified Export/Import - All Data
+  const exportAllData = () => {
+    const data = {
+      exportDate: new Date().toISOString(),
+      version: '1.0',
+      appName: 'Invoicio',
+      data: {
+        currentInvoice: JSON.parse(JSON.stringify(invoice)),
+        settings: JSON.parse(JSON.stringify(settings)),
+        clients: clients.value,
+        catalogItems: catalogItems.value,
+        savedInvoices: savedInvoices.value
+      }
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `invoicio-backup-${new Date().toISOString().split('T')[0]}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const importAllData = (jsonData) => {
+    try {
+      const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData
+      
+      if (!data.data) {
+        throw new Error('Invalid backup file format')
+      }
+
+      const imported = data.data
+      let counts = {
+        settings: false,
+        currentInvoice: false,
+        clients: 0,
+        catalogItems: 0,
+        savedInvoices: 0
+      }
+
+      // Import settings
+      if (imported.settings) {
+        Object.assign(settings, imported.settings)
+        counts.settings = true
+      }
+
+      // Import current invoice
+      if (imported.currentInvoice) {
+        Object.assign(invoice, imported.currentInvoice)
+        counts.currentInvoice = true
+      }
+
+      // Import clients
+      if (Array.isArray(imported.clients)) {
+        clients.value = imported.clients
+        counts.clients = imported.clients.length
+      }
+
+      // Import catalog items
+      if (Array.isArray(imported.catalogItems)) {
+        catalogItems.value = imported.catalogItems
+        counts.catalogItems = imported.catalogItems.length
+      }
+
+      // Import saved invoices
+      if (Array.isArray(imported.savedInvoices)) {
+        savedInvoices.value = imported.savedInvoices
+        counts.savedInvoices = imported.savedInvoices.length
+      }
+
+      return { 
+        success: true, 
+        counts,
+        message: `Imported: ${counts.clients} clients, ${counts.catalogItems} catalog items, ${counts.savedInvoices} saved invoices`
+      }
+    } catch (error) {
+      console.error('Import failed:', error)
+      return { success: false, error: error.message }
+    }
+  }
+
   return {
     invoice,
     settings,
@@ -958,11 +1066,17 @@ export function useInvoice() {
     saveCurrentInvoice,
     loadSavedInvoice,
     updateSavedInvoice,
+    updateSavedInvoiceStatus,
     deleteSavedInvoice,
     renameSavedInvoice,
     duplicateSavedInvoice,
     exportSavedInvoices,
     importSavedInvoices,
-    clearCurrentInvoice
+    clearCurrentInvoice,
+    // Invoice Statuses
+    invoiceStatuses,
+    // Unified Export/Import
+    exportAllData,
+    importAllData
   }
 }

@@ -209,7 +209,41 @@
 
         <!-- Data Management -->
         <div class="settings-section">
-          <h4 class="settings-section-title">Data Management</h4>
+          <h4 class="settings-section-title">Backup & Restore</h4>
+          <p class="section-description">Export or import all your data: invoices, clients, catalog items, and settings.</p>
+          <div class="form-group">
+            <button class="btn btn-primary backup-btn" @click="handleExportAll">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Export All Data
+            </button>
+            <button class="btn btn-secondary backup-btn" @click="triggerImportAll">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Import All Data
+            </button>
+            <input
+              ref="importAllInput"
+              type="file"
+              accept=".json"
+              class="hidden-input"
+              @change="handleImportAll"
+            >
+          </div>
+          <div v-if="importNotification" class="import-notification" :class="importNotification.type">
+            {{ importNotification.message }}
+          </div>
+        </div>
+
+        <!-- Settings Only -->
+        <div class="settings-section">
+          <h4 class="settings-section-title">Settings Only</h4>
           <div class="form-group">
             <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" @click="$emit('export-settings')">
               Export Settings
@@ -217,6 +251,13 @@
             <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" @click="$emit('import-settings')">
               Import Settings
             </button>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section danger-section">
+          <h4 class="settings-section-title">Danger Zone</h4>
+          <div class="form-group">
             <button class="btn btn-danger" style="width: 100%;" @click="resetAll">
               Reset All Data
             </button>
@@ -250,10 +291,14 @@ export default {
       lastRateUpdate,
       fetchExchangeRates,
       loadCachedRates,
-      convertItemsToCurrency
+      convertItemsToCurrency,
+      exportAllData,
+      importAllData
     } = useInvoice()
 
     const convertTargetCurrency = ref('EUR')
+    const importAllInput = ref(null)
+    const importNotification = ref(null)
 
     // Filter out the base currency from conversion options
     const availableConversionCurrencies = computed(() => {
@@ -318,6 +363,45 @@ export default {
       { value: 'dark', label: 'Dark' }
     ]
 
+    // Unified export/import handlers
+    const showImportNotification = (message, type = 'success') => {
+      importNotification.value = { message, type }
+      setTimeout(() => {
+        importNotification.value = null
+      }, 4000)
+    }
+
+    const handleExportAll = () => {
+      exportAllData()
+      showImportNotification('Backup file downloaded!')
+    }
+
+    const triggerImportAll = () => {
+      importAllInput.value?.click()
+    }
+
+    const handleImportAll = (event) => {
+      const file = event.target.files?.[0]
+      if (!file) return
+
+      if (!confirm('This will replace ALL your current data (invoices, clients, catalog, settings). Continue?')) {
+        event.target.value = ''
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = importAllData(e.target.result)
+        if (result.success) {
+          showImportNotification(result.message)
+        } else {
+          showImportNotification(`Import failed: ${result.error}`, 'error')
+        }
+      }
+      reader.readAsText(file)
+      event.target.value = ''
+    }
+
     return {
       settings,
       resetAll,
@@ -334,7 +418,12 @@ export default {
       onConversionToggle,
       convertTargetCurrency,
       handleConvertItems,
-      qrStyles
+      qrStyles,
+      importAllInput,
+      importNotification,
+      handleExportAll,
+      triggerImportAll,
+      handleImportAll
     }
   }
 }
