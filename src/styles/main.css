@@ -189,6 +189,38 @@
   line-height: 1.4;
 }
 
+.pdf-crypto-address {
+  font-family: monospace;
+  font-size: 8px;
+  word-break: break-all;
+  background: #f5f5f5;
+  padding: 4px 6px;
+  border-radius: 3px;
+  margin: 3px 0;
+}
+
+.pdf-qr-section {
+  text-align: left;
+}
+
+.pdf-qr-display {
+  margin: 6px 0;
+}
+
+.pdf-qr-image {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.pdf-qr-link {
+  font-size: 7px;
+  color: #888;
+  word-break: break-all;
+  margin-top: 4px;
+}
+
 .pdf-notes {
   border-top: 1px solid #eee;
   padding-top: 10px;
@@ -600,6 +632,168 @@ body {
 .form-textarea {
   resize: vertical;
   min-height: 80px;
+}
+
+/* Payment Form Styles */
+.payment-fields {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.input-with-prefix {
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 10px 12px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.input-with-prefix .form-input {
+  border-radius: 0 8px 8px 0;
+}
+
+.form-help {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.crypto-address {
+  font-family: monospace;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.qr-preview {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qr-preview-img {
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+.payment-note {
+  padding: 12px;
+  background: var(--gray-50);
+  border-radius: 8px;
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* Preview Payment Styles */
+.preview-payment .payment-details {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.preview-payment .label {
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.preview-payment .crypto-address {
+  font-family: monospace;
+  font-size: 10px;
+  word-break: break-all;
+  background: var(--gray-100);
+  padding: 4px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.preview-payment .qr-display,
+.preview-payment .qr-generated {
+  margin: 8px 0;
+  text-align: center;
+}
+
+.preview-payment .qr-image,
+.preview-payment .qr-generated img {
+  width: 80px;
+  height: 80px;
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
+}
+
+.preview-payment .qr-link {
+  font-size: 9px;
+  color: var(--gray-400);
+  word-break: break-all;
+  margin-top: 4px;
+}
+
+.preview-payment .custom-instructions {
+  white-space: pre-wrap;
+}
+
+/* Payment QR Code Section */
+.payment-qr-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--gray-200);
+  text-align: center;
+}
+
+.payment-qr-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.payment-qr-generated img {
+  width: 80px;
+  height: 80px;
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
+}
+
+.qr-option {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* PDF Payment QR */
+.pdf-payment-qr {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #ddd;
+  text-align: center;
+}
+
+.pdf-payment-qr-label {
+  font-size: 7px;
+  font-weight: bold;
+  color: #888;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.pdf-payment-qr .pdf-qr-image {
+  width: 70px;
+  height: 70px;
 }
 
 .form-row {

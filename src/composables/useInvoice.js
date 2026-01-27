@@ -22,10 +22,41 @@ const invoice = reactive({
   discountPercent: 0,
   payment: {
     method: 'bank',
+    showPaymentQR: false,
+    // Bank Transfer
     bankName: '',
     accountName: '',
     accountNumber: '',
+    routingNumber: '',
+    swiftBic: '',
+    // PayPal
     paypalEmail: '',
+    // Crypto
+    cryptoType: 'BTC',
+    cryptoAddress: '',
+    cryptoNetwork: '',
+    // Wire Transfer
+    wireBankName: '',
+    wireBankAddress: '',
+    wireAccountNumber: '',
+    wireRoutingNumber: '',
+    wireSwiftBic: '',
+    wireReference: '',
+    // QR Code
+    qrCodeData: '',
+    qrCodeImage: '',
+    // Stripe/Card
+    stripeLink: '',
+    // Venmo
+    venmoUsername: '',
+    // Zelle
+    zelleEmail: '',
+    zellePhone: '',
+    // Cash App
+    cashAppTag: '',
+    // Wise (TransferWise)
+    wiseEmail: '',
+    // Custom/Other
     instructions: ''
   },
   notes: ''
@@ -130,10 +161,93 @@ export function useInvoice() {
 
   const hasPaymentInfo = computed(() => {
     const p = invoice.payment
-    return p.method === 'bank' && (p.bankName || p.accountName || p.accountNumber) ||
-           p.method === 'paypal' && p.paypalEmail ||
-           p.method === 'other' && p.instructions ||
-           p.method === 'card' || p.method === 'cash'
+    switch (p.method) {
+      case 'bank':
+        return p.bankName || p.accountName || p.accountNumber
+      case 'paypal':
+        return p.paypalEmail
+      case 'crypto':
+        return p.cryptoAddress
+      case 'wire':
+        return p.wireBankName || p.wireAccountNumber
+      case 'qrcode':
+        return p.qrCodeData || p.qrCodeImage
+      case 'stripe':
+        return p.stripeLink
+      case 'venmo':
+        return p.venmoUsername
+      case 'zelle':
+        return p.zelleEmail || p.zellePhone
+      case 'cashapp':
+        return p.cashAppTag
+      case 'wise':
+        return p.wiseEmail
+      case 'other':
+        return p.instructions
+      case 'card':
+      case 'cash':
+        return true
+      default:
+        return false
+    }
+  })
+
+  // Generate payment QR data string
+  const paymentQRData = computed(() => {
+    const p = invoice.payment
+    if (!p.showPaymentQR) return ''
+    
+    let data = []
+    
+    switch (p.method) {
+      case 'bank':
+        data.push('BANK TRANSFER')
+        if (p.bankName) data.push(`Bank: ${p.bankName}`)
+        if (p.accountName) data.push(`Account: ${p.accountName}`)
+        if (p.accountNumber) data.push(`Number: ${p.accountNumber}`)
+        if (p.routingNumber) data.push(`Routing: ${p.routingNumber}`)
+        if (p.swiftBic) data.push(`SWIFT: ${p.swiftBic}`)
+        break
+      case 'wire':
+        data.push('WIRE TRANSFER')
+        if (p.wireBankName) data.push(`Bank: ${p.wireBankName}`)
+        if (p.wireBankAddress) data.push(`Address: ${p.wireBankAddress}`)
+        if (p.wireAccountNumber) data.push(`Account: ${p.wireAccountNumber}`)
+        if (p.wireRoutingNumber) data.push(`Routing: ${p.wireRoutingNumber}`)
+        if (p.wireSwiftBic) data.push(`SWIFT: ${p.wireSwiftBic}`)
+        if (p.wireReference) data.push(`Ref: ${p.wireReference}`)
+        break
+      case 'paypal':
+        // PayPal.me link format
+        return `https://paypal.me/${p.paypalEmail}`
+      case 'stripe':
+        return p.stripeLink
+      case 'venmo':
+        // Venmo deep link
+        return `venmo://paycharge?txn=pay&recipients=${p.venmoUsername}`
+      case 'zelle':
+        data.push('ZELLE')
+        if (p.zelleEmail) data.push(`Email: ${p.zelleEmail}`)
+        if (p.zellePhone) data.push(`Phone: ${p.zellePhone}`)
+        break
+      case 'cashapp':
+        // Cash App link
+        return `https://cash.app/$${p.cashAppTag}`
+      case 'wise':
+        data.push('WISE')
+        data.push(`Email: ${p.wiseEmail}`)
+        break
+      case 'crypto':
+        // For crypto, include the address directly (can be scanned by wallets)
+        data.push(p.cryptoType)
+        if (p.cryptoNetwork) data.push(`Network: ${p.cryptoNetwork}`)
+        data.push(p.cryptoAddress)
+        break
+      case 'other':
+        return p.instructions
+    }
+    
+    return data.join('\\n')
   })
 
   // Methods
@@ -307,6 +421,7 @@ export function useInvoice() {
     discountAmount,
     grandTotal,
     hasPaymentInfo,
+    paymentQRData,
     calculateItemAmount,
     formatCurrency,
     formatConvertedCurrency,

@@ -109,19 +109,99 @@
           <!-- Payment Info -->
           <div class="preview-payment" v-if="hasPaymentInfo">
             <h4>Payment Information</h4>
-            <div v-if="invoice.payment.method === 'bank'">
-              <div v-if="invoice.payment.bankName">Bank: {{ invoice.payment.bankName }}</div>
-              <div v-if="invoice.payment.accountName">Account: {{ invoice.payment.accountName }}</div>
-              <div v-if="invoice.payment.accountNumber">Number: {{ invoice.payment.accountNumber }}</div>
+            
+            <!-- Bank Transfer -->
+            <div v-if="invoice.payment.method === 'bank'" class="payment-details">
+              <div v-if="invoice.payment.bankName"><span class="label">Bank:</span> {{ invoice.payment.bankName }}</div>
+              <div v-if="invoice.payment.accountName"><span class="label">Account:</span> {{ invoice.payment.accountName }}</div>
+              <div v-if="invoice.payment.accountNumber"><span class="label">Number:</span> {{ invoice.payment.accountNumber }}</div>
+              <div v-if="invoice.payment.routingNumber"><span class="label">Routing:</span> {{ invoice.payment.routingNumber }}</div>
+              <div v-if="invoice.payment.swiftBic"><span class="label">SWIFT/BIC:</span> {{ invoice.payment.swiftBic }}</div>
             </div>
-            <div v-else-if="invoice.payment.method === 'paypal'">
-              PayPal: {{ invoice.payment.paypalEmail }}
+
+            <!-- Wire Transfer -->
+            <div v-else-if="invoice.payment.method === 'wire'" class="payment-details">
+              <div v-if="invoice.payment.wireBankName"><span class="label">Bank:</span> {{ invoice.payment.wireBankName }}</div>
+              <div v-if="invoice.payment.wireBankAddress"><span class="label">Bank Address:</span> {{ invoice.payment.wireBankAddress }}</div>
+              <div v-if="invoice.payment.wireAccountNumber"><span class="label">Account/IBAN:</span> {{ invoice.payment.wireAccountNumber }}</div>
+              <div v-if="invoice.payment.wireRoutingNumber"><span class="label">Routing/ABA:</span> {{ invoice.payment.wireRoutingNumber }}</div>
+              <div v-if="invoice.payment.wireSwiftBic"><span class="label">SWIFT/BIC:</span> {{ invoice.payment.wireSwiftBic }}</div>
+              <div v-if="invoice.payment.wireReference"><span class="label">Reference:</span> {{ invoice.payment.wireReference }}</div>
             </div>
-            <div v-else-if="invoice.payment.method === 'other'">
-              {{ invoice.payment.instructions }}
+
+            <!-- PayPal -->
+            <div v-else-if="invoice.payment.method === 'paypal'" class="payment-details">
+              <div><span class="label">PayPal:</span> {{ invoice.payment.paypalEmail }}</div>
             </div>
-            <div v-else>
-              Payment Method: {{ invoice.payment.method }}
+
+            <!-- Stripe -->
+            <div v-else-if="invoice.payment.method === 'stripe'" class="payment-details">
+              <div><span class="label">Pay via Stripe:</span> <a :href="invoice.payment.stripeLink" target="_blank">{{ invoice.payment.stripeLink }}</a></div>
+            </div>
+
+            <!-- Venmo -->
+            <div v-else-if="invoice.payment.method === 'venmo'" class="payment-details">
+              <div><span class="label">Venmo:</span> @{{ invoice.payment.venmoUsername }}</div>
+            </div>
+
+            <!-- Zelle -->
+            <div v-else-if="invoice.payment.method === 'zelle'" class="payment-details">
+              <div v-if="invoice.payment.zelleEmail"><span class="label">Zelle Email:</span> {{ invoice.payment.zelleEmail }}</div>
+              <div v-if="invoice.payment.zellePhone"><span class="label">Zelle Phone:</span> {{ invoice.payment.zellePhone }}</div>
+            </div>
+
+            <!-- Cash App -->
+            <div v-else-if="invoice.payment.method === 'cashapp'" class="payment-details">
+              <div><span class="label">Cash App:</span> ${{ invoice.payment.cashAppTag }}</div>
+            </div>
+
+            <!-- Wise -->
+            <div v-else-if="invoice.payment.method === 'wise'" class="payment-details">
+              <div><span class="label">Wise:</span> {{ invoice.payment.wiseEmail }}</div>
+            </div>
+
+            <!-- Crypto -->
+            <div v-else-if="invoice.payment.method === 'crypto'" class="payment-details">
+              <div><span class="label">{{ invoice.payment.cryptoType }}:</span></div>
+              <div class="crypto-address">{{ invoice.payment.cryptoAddress }}</div>
+              <div v-if="invoice.payment.cryptoNetwork"><span class="label">Network:</span> {{ invoice.payment.cryptoNetwork }}</div>
+            </div>
+
+            <!-- QR Code -->
+            <div v-else-if="invoice.payment.method === 'qrcode'" class="payment-details">
+              <div v-if="invoice.payment.qrCodeImage" class="qr-display">
+                <img :src="invoice.payment.qrCodeImage" alt="Payment QR Code" class="qr-image">
+              </div>
+              <div v-else-if="invoice.payment.qrCodeData">
+                <div><span class="label">Scan to pay:</span></div>
+                <div class="qr-generated">
+                  <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(invoice.payment.qrCodeData)" alt="QR Code">
+                </div>
+                <div class="qr-link">{{ invoice.payment.qrCodeData }}</div>
+              </div>
+            </div>
+
+            <!-- Card -->
+            <div v-else-if="invoice.payment.method === 'card'" class="payment-details">
+              <div>Payment Method: Credit Card</div>
+            </div>
+
+            <!-- Cash -->
+            <div v-else-if="invoice.payment.method === 'cash'" class="payment-details">
+              <div>Payment Method: Cash</div>
+            </div>
+
+            <!-- Other/Custom -->
+            <div v-else-if="invoice.payment.method === 'other'" class="payment-details">
+              <div class="custom-instructions">{{ invoice.payment.instructions }}</div>
+            </div>
+
+            <!-- Payment QR Code (for any method with showPaymentQR enabled) -->
+            <div v-if="invoice.payment.showPaymentQR && paymentQRData && invoice.payment.method !== 'qrcode'" class="payment-qr-section">
+              <div class="payment-qr-label">Scan to Pay</div>
+              <div class="payment-qr-generated">
+                <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(paymentQRData)" alt="Payment QR Code">
+              </div>
             </div>
           </div>
 
@@ -152,6 +232,7 @@ export default {
       discountAmount,
       grandTotal,
       hasPaymentInfo,
+      paymentQRData,
       calculateItemAmount,
       formatCurrency,
       formatConvertedCurrency,
@@ -174,6 +255,7 @@ export default {
       discountAmount,
       grandTotal,
       hasPaymentInfo,
+      paymentQRData,
       calculateItemAmount,
       formatCurrency,
       formatConvertedCurrency,
