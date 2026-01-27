@@ -109,7 +109,7 @@
           <!-- Payment Info -->
           <div class="preview-payment" v-if="hasPaymentInfo">
             <h4>Payment Information</h4>
-            
+
             <!-- Bank Transfer -->
             <div v-if="invoice.payment.method === 'bank'" class="payment-details">
               <div v-if="invoice.payment.bankName"><span class="label">Bank:</span> {{ invoice.payment.bankName }}</div>

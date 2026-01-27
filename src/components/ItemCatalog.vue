@@ -20,9 +20,9 @@
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
               </svg>
-              <input 
-                type="text" 
-                v-model="searchQuery" 
+              <input
+                type="text"
+                v-model="searchQuery"
                 placeholder="Search items..."
                 class="form-input"
               >
@@ -120,9 +120,9 @@
                   <span class="category-count">{{ category.items.length }} items</span>
                 </div>
                 <div class="catalog-items">
-                  <div 
-                    v-for="item in category.items" 
-                    :key="item.id" 
+                  <div
+                    v-for="item in category.items"
+                    :key="item.id"
                     class="catalog-item"
                     @click="selectItem(item)"
                   >
@@ -262,7 +262,7 @@ export default {
         }
         groups[category].push(item)
       })
-      
+
       // Sort categories, put Uncategorized last
       return Object.keys(groups)
         .sort((a, b) => {
@@ -745,11 +745,11 @@ export default {
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .catalog-toolbar {
     flex-direction: column;
   }
-  
+
   .toolbar-actions {
     justify-content: flex-end;
   }

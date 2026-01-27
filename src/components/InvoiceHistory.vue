@@ -20,9 +20,9 @@
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
               </svg>
-              <input 
-                type="text" 
-                v-model="searchQuery" 
+              <input
+                type="text"
+                v-model="searchQuery"
                 placeholder="Search invoices..."
                 class="form-input"
               >
@@ -58,10 +58,10 @@
           <!-- Save Name Dialog -->
           <div v-if="showSaveDialog" class="save-dialog">
             <h4>Save Invoice</h4>
-            <input 
-              type="text" 
-              class="form-input" 
-              v-model="saveName" 
+            <input
+              type="text"
+              class="form-input"
+              v-model="saveName"
               placeholder="Enter a name for this invoice..."
               @keyup.enter="confirmSave"
               ref="saveNameInput"
@@ -90,9 +90,9 @@
             </div>
 
             <div v-else class="invoice-cards">
-              <div 
-                v-for="inv in filteredInvoices" 
-                :key="inv.id" 
+              <div
+                v-for="inv in filteredInvoices"
+                :key="inv.id"
                 class="invoice-card"
                 :class="{ 'editing': editingId === inv.id }"
               >
@@ -101,10 +101,10 @@
                     <div class="invoice-name" v-if="editingId !== inv.id">
                       {{ inv.name }}
                     </div>
-                    <input 
+                    <input
                       v-else
-                      type="text" 
-                      class="form-input rename-input" 
+                      type="text"
+                      class="form-input rename-input"
                       v-model="editingName"
                       @click.stop
                       @keyup.enter="saveRename(inv.id)"
@@ -119,8 +119,8 @@
                   <div class="invoice-details">
                     <div class="invoice-total">{{ formatAmount(inv.total, inv.currency) }}</div>
                     <div class="invoice-date">{{ formatDate(inv.createdAt) }}</div>
-                    <span 
-                      class="status-badge status-badge-sm" 
+                    <span
+                      class="status-badge status-badge-sm"
                       :style="{ backgroundColor: invoiceStatuses[inv.status || 'draft']?.color }"
                     >
                       {{ invoiceStatuses[inv.status || 'draft']?.label }}
@@ -128,9 +128,9 @@
                   </div>
                 </div>
                 <div class="invoice-card-actions" @click.stop>
-                  <select 
-                    class="status-dropdown" 
-                    :value="inv.status || 'draft'" 
+                  <select
+                    class="status-dropdown"
+                    :value="inv.status || 'draft'"
                     @change="changeStatus(inv.id, $event.target.value)"
                     @click.stop
                     title="Change status"
@@ -139,20 +139,20 @@
                       {{ statusInfo.label }}
                     </option>
                   </select>
-                  <button 
+                  <button
                     v-if="editingId === inv.id"
-                    class="btn btn-icon btn-sm btn-success" 
-                    @click="saveRename(inv.id)" 
+                    class="btn btn-icon btn-sm btn-success"
+                    @click="saveRename(inv.id)"
                     title="Save name"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
                   </button>
-                  <button 
+                  <button
                     v-if="editingId === inv.id"
-                    class="btn btn-icon btn-sm" 
-                    @click="cancelRename" 
+                    class="btn btn-icon btn-sm"
+                    @click="cancelRename"
                     title="Cancel"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -297,10 +297,10 @@ export default {
     const formatDate = (dateStr) => {
       if (!dateStr) return ''
       const date = new Date(dateStr)
-      return date.toLocaleDateString(undefined, { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+      return date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       })
     }
 
@@ -774,16 +774,16 @@ export default {
   .history-toolbar {
     flex-direction: column;
   }
-  
+
   .toolbar-actions {
     justify-content: flex-end;
   }
-  
+
   .invoice-card-main {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .invoice-details {
     text-align: left;
     margin-top: 0.5rem;

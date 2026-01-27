@@ -60,9 +60,9 @@
           </td>
           <td>
             <div class="row-actions">
-              <button 
-                class="btn btn-icon btn-sm" 
-                @click="saveItemToCatalog(index)" 
+              <button
+                class="btn btn-icon btn-sm"
+                @click="saveItemToCatalog(index)"
                 :disabled="!item.description"
                 title="Save to catalog"
               >

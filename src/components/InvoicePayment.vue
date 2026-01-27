@@ -3,7 +3,7 @@
     <div class="card-header">
       <h3 class="card-title">Payment Information</h3>
     </div>
-    
+
     <!-- Payment Method Selector -->
     <div class="form-group">
       <label class="form-label">Payment Method</label>
@@ -297,7 +297,7 @@ export default {
       invoice.payment.qrCodeImage = ''
     }
 
-    return { 
+    return {
       invoice,
       handleQrUpload,
       removeQrImage,

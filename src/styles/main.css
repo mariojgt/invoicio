@@ -1402,7 +1402,7 @@ body {
 .qr-mini {
   width: 20px;
   height: 20px;
-  background: 
+  background:
     linear-gradient(90deg, currentColor 33%, transparent 33%),
     linear-gradient(currentColor 33%, transparent 33%);
   background-size: 6px 6px;

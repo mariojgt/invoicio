@@ -81,7 +81,7 @@
       <!-- Payment Info -->
       <div v-if="hasPaymentInfo" class="pdf-payment">
         <div class="pdf-payment-label">Payment Information</div>
-        
+
         <!-- Bank Transfer -->
         <div v-if="invoice.payment.method === 'bank'" class="pdf-payment-detail">
           <div v-if="invoice.payment.bankName">Bank: {{ invoice.payment.bankName }}</div>

@@ -7,6 +7,7 @@
       @open-clients="showClientDatabase = true"
       @open-catalog="showItemCatalog = true"
       @open-history="showInvoiceHistory = true"
+      @open-dashboard="showDashboard = true"
     />
 
     <main class="main-content">
@@ -42,6 +43,11 @@
     <InvoiceHistory
       :isOpen="showInvoiceHistory"
       @close="showInvoiceHistory = false"
+    />
+
+    <Dashboard
+      :isOpen="showDashboard"
+      @close="showDashboard = false"
     />
 
     <PdfTemplate ref="pdfTemplateRef" />
@@ -81,6 +87,7 @@ import SettingsPanel from './components/SettingsPanel.vue'
 import ClientDatabase from './components/ClientDatabase.vue'
 import ItemCatalog from './components/ItemCatalog.vue'
 import InvoiceHistory from './components/InvoiceHistory.vue'
+import Dashboard from './components/Dashboard.vue'
 import PdfTemplate from './components/PdfTemplate.vue'
 
 export default {
@@ -97,6 +104,7 @@ export default {
     ClientDatabase,
     ItemCatalog,
     InvoiceHistory,
+    Dashboard,
     PdfTemplate
   },
   setup() {
@@ -106,6 +114,7 @@ export default {
     const showClientDatabase = ref(false)
     const showItemCatalog = ref(false)
     const showInvoiceHistory = ref(false)
+    const showDashboard = ref(false)
     const loadInput = ref(null)
     const settingsInput = ref(null)
     const pdfTemplateRef = ref(null)
@@ -274,6 +283,7 @@ export default {
       showClientDatabase,
       showItemCatalog,
       showInvoiceHistory,
+      showDashboard,
       loadInput,
       settingsInput,
       pdfTemplateRef,

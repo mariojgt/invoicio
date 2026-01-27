@@ -10,6 +10,15 @@
       </a>
     </div>
     <nav class="header-actions" role="navigation" aria-label="Main actions">
+      <button class="btn btn-secondary" @click="$emit('open-dashboard')" aria-label="Open dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M3 3v18h18"/>
+          <path d="M18 17V9"/>
+          <path d="M13 17V5"/>
+          <path d="M8 17v-3"/>
+        </svg>
+        Dashboard
+      </button>
       <button class="btn btn-secondary" @click="$emit('open-clients')" aria-label="Open client database">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -65,6 +74,6 @@
 <script>
 export default {
   name: 'AppHeader',
-  emits: ['load', 'save', 'toggle-settings', 'open-clients', 'open-catalog', 'open-history']
+  emits: ['load', 'save', 'toggle-settings', 'open-clients', 'open-catalog', 'open-history', 'open-dashboard']
 }
 </script>

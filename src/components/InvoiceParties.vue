@@ -32,9 +32,9 @@
               </svg>
               Select
             </button>
-            <button 
-              class="btn btn-secondary btn-xs" 
-              @click="saveClientToDatabase" 
+            <button
+              class="btn btn-secondary btn-xs"
+              @click="saveClientToDatabase"
               :disabled="!invoice.to.name"
               title="Save client to database"
             >
@@ -72,14 +72,14 @@ export default {
   emits: ['open-clients'],
   setup() {
     const { invoice, saveCurrentClientToDatabase } = useInvoice()
-    
+
     const saveClientToDatabase = () => {
       const result = saveCurrentClientToDatabase()
       if (result) {
         alert('Client saved to database!')
       }
     }
-    
+
     return { invoice, saveClientToDatabase }
   }
 }

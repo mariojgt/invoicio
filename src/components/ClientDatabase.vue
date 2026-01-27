@@ -12,9 +12,9 @@
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
-          <input 
-            type="text" 
-            v-model="searchQuery" 
+          <input
+            type="text"
+            v-model="searchQuery"
             placeholder="Search clients..."
             class="search-input"
           >
@@ -108,9 +108,9 @@
           <p v-else>No clients yet. Add your first client to get started!</p>
         </div>
 
-        <div 
-          v-for="client in filteredClients" 
-          :key="client.id" 
+        <div
+          v-for="client in filteredClients"
+          :key="client.id"
           class="client-card"
         >
           <div class="client-avatar">
@@ -146,11 +146,11 @@
       </div>
 
       <!-- Hidden file input for import -->
-      <input 
-        ref="importInput" 
-        type="file" 
-        accept=".json,.csv" 
-        class="hidden-input" 
+      <input
+        ref="importInput"
+        type="file"
+        accept=".json,.csv"
+        class="hidden-input"
         @change="handleImport"
       >
 
@@ -190,10 +190,10 @@ export default {
   },
   emits: ['close', 'client-selected'],
   setup(props, { emit }) {
-    const { 
-      clients, 
-      addClient, 
-      updateClient, 
+    const {
+      clients,
+      addClient,
+      updateClient,
       deleteClient,
       selectClient,
       exportClients,
@@ -221,7 +221,7 @@ export default {
     const filteredClients = computed(() => {
       if (!searchQuery.value) return clients.value
       const query = searchQuery.value.toLowerCase()
-      return clients.value.filter(client => 
+      return clients.value.filter(client =>
         client.name?.toLowerCase().includes(query) ||
         client.email?.toLowerCase().includes(query) ||
         client.company?.toLowerCase().includes(query)
@@ -642,11 +642,11 @@ export default {
   .client-form .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .modal-toolbar {
     flex-direction: column;
   }
-  
+
   .toolbar-actions {
     width: 100%;
     justify-content: flex-end;

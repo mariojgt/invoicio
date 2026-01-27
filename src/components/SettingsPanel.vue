@@ -91,8 +91,8 @@
                   {{ code }} - {{ curr.name }}
                 </option>
               </select>
-              <button 
-                class="btn btn-primary btn-convert" 
+              <button
+                class="btn btn-primary btn-convert"
                 @click="handleConvertItems"
                 :disabled="conversionLoading || convertTargetCurrency === settings.currency"
               >
@@ -191,8 +191,8 @@
           <div class="form-group">
             <label class="form-label">QR Code Style</label>
             <div class="qr-style-selector">
-              <button 
-                v-for="style in qrStyles" 
+              <button
+                v-for="style in qrStyles"
                 :key="style.value"
                 class="qr-style-btn"
                 :class="{ active: settings.qrCodeStyle === style.value }"
@@ -282,12 +282,12 @@ export default {
   },
   emits: ['close', 'export-settings', 'import-settings'],
   setup() {
-    const { 
-      settings, 
-      resetAll, 
-      currencies, 
-      exchangeRates, 
-      conversionLoading, 
+    const {
+      settings,
+      resetAll,
+      currencies,
+      exchangeRates,
+      conversionLoading,
       lastRateUpdate,
       fetchExchangeRates,
       loadCachedRates,
