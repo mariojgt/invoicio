@@ -28,6 +28,8 @@
 
     <PdfTemplate ref="pdfTemplateRef" />
 
+    <AppFooter />
+
     <!-- Hidden File Inputs -->
     <input
       ref="loadInput"
@@ -51,6 +53,7 @@ import { ref, onMounted } from 'vue'
 import html2pdf from 'html2pdf.js'
 import { useInvoice } from './composables/useInvoice'
 import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
 import InvoiceDetails from './components/InvoiceDetails.vue'
 import InvoiceParties from './components/InvoiceParties.vue'
 import InvoiceItems from './components/InvoiceItems.vue'
@@ -63,6 +66,7 @@ export default {
   name: 'App',
   components: {
     AppHeader,
+    AppFooter,
     InvoiceDetails,
     InvoiceParties,
     InvoiceItems,

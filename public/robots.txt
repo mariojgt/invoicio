@@ -1,0 +1,11 @@
+# Robots.txt for Invoicio
+# https://mariojgt.github.io/invoicio/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mariojgt.github.io/invoicio/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

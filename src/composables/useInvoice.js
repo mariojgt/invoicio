@@ -73,7 +73,9 @@ const settings = reactive({
   showDiscount: false,
   template: 'classic',
   showConversion: false,
-  convertToCurrency: 'EUR'
+  convertToCurrency: 'EUR',
+  qrCodeStyle: 'default',
+  qrCodeUseAccent: true
 })
 
 const isGeneratingPDF = ref(false)
@@ -250,6 +252,60 @@ export function useInvoice() {
     return data.join('\\n')
   })
 
+  // Generate QR code URL with styling
+  const getQRCodeUrl = (data, size = 100) => {
+    if (!data) return ''
+    
+    const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/'
+    const params = new URLSearchParams({
+      size: `${size}x${size}`,
+      data: data,
+      format: 'png',
+      margin: '10'
+    })
+    
+    // Apply accent color if enabled
+    if (settings.qrCodeUseAccent && settings.accentColor) {
+      // Remove # from hex color
+      const color = settings.accentColor.replace('#', '')
+      params.append('color', color)
+    }
+    
+    // Apply QR style (background variations)
+    switch (settings.qrCodeStyle) {
+      case 'rounded':
+        // Lighter background
+        params.append('bgcolor', 'f8f9fa')
+        break
+      case 'dark':
+        // Dark mode - swap colors
+        if (!settings.qrCodeUseAccent) {
+          params.append('color', 'ffffff')
+        }
+        params.append('bgcolor', '1f2937')
+        break
+      case 'minimal':
+        // Very light, subtle
+        params.append('bgcolor', 'ffffff')
+        if (!settings.qrCodeUseAccent) {
+          params.append('color', '6b7280')
+        }
+        break
+      case 'bold':
+        // High contrast
+        params.append('bgcolor', 'ffffff')
+        if (!settings.qrCodeUseAccent) {
+          params.append('color', '000000')
+        }
+        break
+      default:
+        // Default - white background
+        params.append('bgcolor', 'ffffff')
+    }
+    
+    return `${baseUrl}?${params.toString()}`
+  }
+
   // Methods
   const calculateItemAmount = (item) => {
     const itemSubtotal = item.quantity * item.price
@@ -422,6 +478,7 @@ export function useInvoice() {
     grandTotal,
     hasPaymentInfo,
     paymentQRData,
+    getQRCodeUrl,
     calculateItemAmount,
     formatCurrency,
     formatConvertedCurrency,

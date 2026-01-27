@@ -179,6 +179,34 @@
           </div>
         </div>
 
+        <!-- QR Code Settings -->
+        <div class="settings-section">
+          <h4 class="settings-section-title">QR Code Style</h4>
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" class="checkbox-input" id="qrUseAccent" v-model="settings.qrCodeUseAccent">
+              <label for="qrUseAccent">Use accent color for QR codes</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">QR Code Style</label>
+            <div class="qr-style-selector">
+              <button 
+                v-for="style in qrStyles" 
+                :key="style.value"
+                class="qr-style-btn"
+                :class="{ active: settings.qrCodeStyle === style.value }"
+                @click="settings.qrCodeStyle = style.value"
+              >
+                <div class="qr-style-preview" :class="'qr-preview-' + style.value">
+                  <div class="qr-mini"></div>
+                </div>
+                <span>{{ style.label }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Data Management -->
         <div class="settings-section">
           <h4 class="settings-section-title">Data Management</h4>
@@ -281,6 +309,15 @@ export default {
       }
     }
 
+    // QR Code style options
+    const qrStyles = [
+      { value: 'default', label: 'Default' },
+      { value: 'rounded', label: 'Rounded' },
+      { value: 'minimal', label: 'Minimal' },
+      { value: 'bold', label: 'Bold' },
+      { value: 'dark', label: 'Dark' }
+    ]
+
     return {
       settings,
       resetAll,
@@ -296,7 +333,8 @@ export default {
       onCurrencyChange,
       onConversionToggle,
       convertTargetCurrency,
-      handleConvertItems
+      handleConvertItems,
+      qrStyles
     }
   }
 }

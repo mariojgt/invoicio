@@ -145,7 +145,7 @@
             <img :src="invoice.payment.qrCodeImage" alt="Payment QR Code" class="pdf-qr-image">
           </div>
           <div v-else-if="invoice.payment.qrCodeData" class="pdf-qr-display">
-            <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(invoice.payment.qrCodeData)" alt="QR Code" class="pdf-qr-image">
+            <img :src="getQRCodeUrl(invoice.payment.qrCodeData, 100)" alt="QR Code" class="pdf-qr-image">
             <div class="pdf-qr-link">{{ invoice.payment.qrCodeData }}</div>
           </div>
         </div>
@@ -168,7 +168,7 @@
         <!-- Payment QR Code (for any method with showPaymentQR enabled) -->
         <div v-if="invoice.payment.showPaymentQR && paymentQRData && invoice.payment.method !== 'qrcode'" class="pdf-payment-qr">
           <div class="pdf-payment-qr-label">Scan to Pay</div>
-          <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=' + encodeURIComponent(paymentQRData)" alt="Payment QR" class="pdf-qr-image">
+          <img :src="getQRCodeUrl(paymentQRData, 80)" alt="Payment QR" class="pdf-qr-image">
         </div>
       </div>
 
@@ -196,6 +196,7 @@ export default {
       grandTotal,
       hasPaymentInfo,
       paymentQRData,
+      getQRCodeUrl,
       calculateItemAmount,
       formatCurrency,
       formatConvertedCurrency,
@@ -214,6 +215,7 @@ export default {
       grandTotal,
       hasPaymentInfo,
       paymentQRData,
+      getQRCodeUrl,
       calculateItemAmount,
       formatCurrency,
       formatConvertedCurrency,
