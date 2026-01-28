@@ -8,6 +8,7 @@
       @open-catalog="showItemCatalog = true"
       @open-history="showInvoiceHistory = true"
       @open-dashboard="showDashboard = true"
+      @open-templates="showEmailTemplates = true"
     />
 
     <main class="main-content">
@@ -50,6 +51,11 @@
       @close="showDashboard = false"
     />
 
+    <EmailTemplates
+      :isOpen="showEmailTemplates"
+      @close="showEmailTemplates = false"
+    />
+
     <PdfTemplate ref="pdfTemplateRef" />
 
     <AppFooter />
@@ -88,6 +94,7 @@ import ClientDatabase from './components/ClientDatabase.vue'
 import ItemCatalog from './components/ItemCatalog.vue'
 import InvoiceHistory from './components/InvoiceHistory.vue'
 import Dashboard from './components/Dashboard.vue'
+import EmailTemplates from './components/EmailTemplates.vue'
 import PdfTemplate from './components/PdfTemplate.vue'
 
 export default {
@@ -105,6 +112,7 @@ export default {
     ItemCatalog,
     InvoiceHistory,
     Dashboard,
+    EmailTemplates,
     PdfTemplate
   },
   setup() {
@@ -115,6 +123,7 @@ export default {
     const showItemCatalog = ref(false)
     const showInvoiceHistory = ref(false)
     const showDashboard = ref(false)
+    const showEmailTemplates = ref(false)
     const loadInput = ref(null)
     const settingsInput = ref(null)
     const pdfTemplateRef = ref(null)
@@ -284,6 +293,7 @@ export default {
       showItemCatalog,
       showInvoiceHistory,
       showDashboard,
+      showEmailTemplates,
       loadInput,
       settingsInput,
       pdfTemplateRef,

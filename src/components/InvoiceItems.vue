@@ -58,7 +58,16 @@
             <input type="number" class="form-input" v-model.number="item.quantity" min="0" step="1">
           </td>
           <td>
-            <input type="number" class="form-input" v-model.number="item.price" min="0" step="0.01">
+            <div class="price-with-convert">
+              <input type="number" class="form-input" v-model.number="item.price" min="0" step="0.01">
+              <button 
+                class="btn btn-icon btn-sm convert-btn" 
+                @click="openConvertModal(index)"
+                title="Convert from another currency"
+              >
+                💱
+              </button>
+            </div>
           </td>
           <td v-if="settings.taxMode === 'per-item'">
             <input type="number" class="form-input" v-model.number="item.tax" min="0" step="0.01">
@@ -351,6 +360,73 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- Price Convert Modal -->
+    <Teleport to="body">
+      <div v-if="showConvertModal" class="modal-overlay" @click.self="showConvertModal = false">
+        <div class="modal convert-modal">
+          <div class="modal-header">
+            <h2>💱 Convert Price</h2>
+            <button class="btn btn-icon" @click="showConvertModal = false">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="convert-info">Convert price from another currency to {{ settings.currency }}</p>
+            
+            <div class="convert-form">
+              <div class="form-group">
+                <label>Amount in source currency</label>
+                <input 
+                  type="number" 
+                  v-model.number="convertSourceAmount" 
+                  class="form-input"
+                  step="0.01"
+                  min="0"
+                  @input="calculateConversion"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label>Source currency</label>
+                <select v-model="convertSourceCurrency" class="form-input" @change="calculateConversion">
+                  <option v-for="(info, code) in currencies" :key="code" :value="code">
+                    {{ code }} - {{ info.name }}
+                  </option>
+                </select>
+              </div>
+              
+              <div v-if="convertedResult !== null" class="convert-result">
+                <div class="convert-arrow">↓</div>
+                <div class="converted-amount">
+                  {{ formatCurrency(convertedResult) }}
+                </div>
+                <div class="convert-rate" v-if="currentConvertRate">
+                  Rate: 1 {{ convertSourceCurrency }} = {{ currentConvertRate.toFixed(4) }} {{ settings.currency }}
+                </div>
+              </div>
+              
+              <div v-if="convertLoading" class="convert-loading">
+                Fetching rate...
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="showConvertModal = false">Cancel</button>
+            <button 
+              class="btn btn-primary" 
+              @click="applyConversion"
+              :disabled="convertedResult === null"
+            >
+              Apply Price
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -392,6 +468,15 @@ export default {
     const tempApiKey = ref('')
     const fileInput = ref(null)
     const selectedFile = ref(null)
+
+    // Per-item price conversion
+    const showConvertModal = ref(false)
+    const convertItemIndex = ref(null)
+    const convertSourceAmount = ref(0)
+    const convertSourceCurrency = ref('USD')
+    const convertedResult = ref(null)
+    const currentConvertRate = ref(null)
+    const convertLoading = ref(false)
     const previewImage = ref(null)
     const isDragging = ref(false)
     const scannedItems = ref([])
@@ -558,6 +643,54 @@ export default {
       clearPreview()
     }
 
+    // Per-item price conversion functions
+    const openConvertModal = (index) => {
+      convertItemIndex.value = index
+      convertSourceAmount.value = invoice.items[index].price || 0
+      convertSourceCurrency.value = 'USD'
+      convertedResult.value = null
+      currentConvertRate.value = null
+      showConvertModal.value = true
+      // Auto-calculate if there's an amount
+      if (convertSourceAmount.value > 0) {
+        calculateConversion()
+      }
+    }
+
+    const calculateConversion = async () => {
+      if (!convertSourceAmount.value || convertSourceCurrency.value === settings.currency) {
+        convertedResult.value = convertSourceCurrency.value === settings.currency ? convertSourceAmount.value : null
+        currentConvertRate.value = convertSourceCurrency.value === settings.currency ? 1 : null
+        return
+      }
+
+      convertLoading.value = true
+      try {
+        const response = await fetch(
+          `https://api.frankfurter.app/latest?from=${convertSourceCurrency.value}&to=${settings.currency}`
+        )
+        if (response.ok) {
+          const data = await response.json()
+          const rate = data.rates[settings.currency]
+          currentConvertRate.value = rate
+          convertedResult.value = parseFloat((convertSourceAmount.value * rate).toFixed(2))
+        }
+      } catch (error) {
+        console.error('Failed to fetch rate:', error)
+        convertedResult.value = null
+      } finally {
+        convertLoading.value = false
+      }
+    }
+
+    const applyConversion = () => {
+      if (convertedResult.value !== null && convertItemIndex.value !== null) {
+        invoice.items[convertItemIndex.value].price = convertedResult.value
+        showConvertModal.value = false
+        showNotification('Price converted!')
+      }
+    }
+
     return {
       invoice,
       settings,
@@ -600,7 +733,17 @@ export default {
       isConverting,
       conversionRate,
       formatSourcePrice,
-      convertPrices
+      convertPrices,
+      // Per-item conversion
+      showConvertModal,
+      convertSourceAmount,
+      convertSourceCurrency,
+      convertedResult,
+      currentConvertRate,
+      convertLoading,
+      openConvertModal,
+      calculateConversion,
+      applyConversion
     }
   }
 }
@@ -616,6 +759,93 @@ export default {
 .row-actions {
   display: flex;
   gap: 0.25rem;
+}
+
+.price-with-convert {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.price-with-convert .form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.convert-btn {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.875rem;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.convert-btn:hover {
+  background: var(--gray-200);
+}
+
+.convert-modal {
+  max-width: 400px;
+}
+
+.convert-info {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.convert-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.convert-form label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--gray-700);
+}
+
+.convert-result {
+  text-align: center;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.convert-arrow {
+  font-size: 1.5rem;
+  color: var(--gray-400);
+  margin-bottom: 0.5rem;
+}
+
+.converted-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.convert-rate {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+}
+
+.convert-loading {
+  text-align: center;
+  color: var(--gray-500);
+  padding: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--gray-200);
 }
 
 .item-notification {

@@ -12,6 +12,7 @@ import {
   conversionLoading,
   lastRateUpdate
 } from './state'
+import { emailTemplates, defaultTemplateId } from './useEmailTemplates'
 
 // Import constants
 import { currencies, invoiceStatuses, paymentMethods } from './constants'
@@ -167,7 +168,9 @@ export function useInvoice() {
         settings: JSON.parse(JSON.stringify(settings)),
         clients: clients.value,
         catalogItems: catalogItems.value,
-        savedInvoices: savedInvoices.value
+        savedInvoices: savedInvoices.value,
+        emailTemplates: emailTemplates.value,
+        defaultTemplateId: defaultTemplateId.value
       }
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
@@ -193,7 +196,8 @@ export function useInvoice() {
         currentInvoice: false,
         clients: 0,
         catalogItems: 0,
-        savedInvoices: 0
+        savedInvoices: 0,
+        emailTemplates: 0
       }
 
       // Import settings
@@ -226,10 +230,19 @@ export function useInvoice() {
         counts.savedInvoices = imported.savedInvoices.length
       }
 
+      // Import email templates
+      if (Array.isArray(imported.emailTemplates)) {
+        emailTemplates.value = imported.emailTemplates
+        counts.emailTemplates = imported.emailTemplates.length
+      }
+      if (imported.defaultTemplateId) {
+        defaultTemplateId.value = imported.defaultTemplateId
+      }
+
       return {
         success: true,
         counts,
-        message: `Imported: ${counts.clients} clients, ${counts.catalogItems} catalog items, ${counts.savedInvoices} saved invoices`
+        message: `Imported: ${counts.clients} clients, ${counts.catalogItems} catalog items, ${counts.savedInvoices} saved invoices, ${counts.emailTemplates} email templates`
       }
     } catch (error) {
       console.error('Import failed:', error)

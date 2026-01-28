@@ -210,7 +210,7 @@
         <!-- Data Management -->
         <div class="settings-section">
           <h4 class="settings-section-title">Backup & Restore</h4>
-          <p class="section-description">Export or import all your data: invoices, clients, catalog items, and settings.</p>
+          <p class="section-description">Export or import all your data: invoices, clients, catalog items, email templates, and settings.</p>
           <div class="form-group">
             <button class="btn btn-primary backup-btn" @click="handleExportAll">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
