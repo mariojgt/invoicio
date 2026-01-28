@@ -71,8 +71,8 @@ export function useImageScanner() {
               content: [
                 {
                   type: 'text',
-                  text: `Analyze this image and extract all items/products/services that could be used in an invoice. 
-                  
+                  text: `Analyze this image and extract all items/products/services that could be used in an invoice.
+
 For each item found, provide:
 - description: A clear description of the item
 - quantity: The quantity (default to 1 if not visible)

@@ -8,7 +8,7 @@
         </svg>
         <div>
           <strong>Invoicio</strong>
-          <span>Free Invoice Generator</span>
+          <span>Free Invoice Generator, because nobody has time to pay for invoice tools, if you like this tool please consider contribute.</span>
         </div>
       </div>
 
@@ -21,6 +21,7 @@
           <li>QR code payments</li>
           <li>Multi-currency support</li>
           <li>No signup required</li>
+          <li>Use Ai to scan documents and create records</li>
         </ul>
       </div>
 

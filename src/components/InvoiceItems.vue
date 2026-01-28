@@ -182,10 +182,10 @@
               <h3>OpenAI API Key Required</h3>
               <p>To use the AI image scanner, you need to provide your OpenAI API key. Your key is stored locally and never sent to our servers.</p>
               <div class="api-key-input">
-                <input 
-                  type="password" 
-                  class="form-input" 
-                  v-model="tempApiKey" 
+                <input
+                  type="password"
+                  class="form-input"
+                  v-model="tempApiKey"
                   placeholder="sk-..."
                   @keyup.enter="saveKey"
                 >
@@ -200,7 +200,7 @@
 
             <!-- Image Upload -->
             <div v-else class="scan-content">
-              <div 
+              <div
                 class="upload-zone"
                 :class="{ 'drag-over': isDragging, 'has-image': previewImage }"
                 @dragover.prevent="isDragging = true"
@@ -228,10 +228,10 @@
                 </div>
               </div>
 
-              <input 
+              <input
                 ref="fileInput"
-                type="file" 
-                accept="image/*" 
+                type="file"
+                accept="image/*"
                 class="hidden-input"
                 @change="handleFileSelect"
               >
@@ -251,7 +251,7 @@
                     <label :for="'item-' + index" class="scanned-item-info">
                       <span class="scanned-description">{{ item.description }}</span>
                       <span class="scanned-details">
-                        Qty: {{ item.quantity }} × 
+                        Qty: {{ item.quantity }} ×
                         <span v-if="item.convertedPrice !== undefined">
                           <s style="color: var(--gray-400); font-size: 0.75rem;">{{ formatSourcePrice(item.price) }}</s>
                           → {{ formatCurrency(item.convertedPrice) }}
@@ -289,7 +289,7 @@
                         </option>
                       </select>
                     </div>
-                    <button 
+                    <button
                       class="btn btn-secondary btn-sm"
                       @click="convertPrices"
                       :disabled="isConverting || sourceCurrency === settings.currency"
@@ -316,9 +316,9 @@
 
               <!-- Actions -->
               <div class="scan-actions">
-                <button 
-                  class="btn btn-primary" 
-                  @click="startScan" 
+                <button
+                  class="btn btn-primary"
+                  @click="startScan"
                   :disabled="!selectedFile || isScanning"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -326,9 +326,9 @@
                   </svg>
                   Scan Image
                 </button>
-                <button 
+                <button
                   v-if="scannedItems.length > 0"
-                  class="btn btn-success" 
+                  class="btn btn-success"
                   @click="addScannedItems"
                   :disabled="!hasSelectedItems"
                 >
@@ -395,7 +395,7 @@ export default {
     const previewImage = ref(null)
     const isDragging = ref(false)
     const scannedItems = ref([])
-    
+
     // Currency conversion
     const sourceCurrency = ref('USD')
     const targetCurrency = computed(() => settings.currency)
@@ -446,7 +446,7 @@ export default {
     const processFile = (file) => {
       selectedFile.value = file
       scannedItems.value = []
-      
+
       const reader = new FileReader()
       reader.onload = (e) => {
         previewImage.value = e.target.result
@@ -469,7 +469,7 @@ export default {
       if (!selectedFile.value) return
 
       conversionRate.value = null
-      
+
       try {
         const items = await scanImage(selectedFile.value)
         scannedItems.value = items.map(item => ({
@@ -477,7 +477,7 @@ export default {
           selected: true,
           convertedPrice: undefined
         }))
-        
+
         if (items.length === 0) {
           showNotification('No items detected in the image')
         }
@@ -495,33 +495,33 @@ export default {
     // Convert prices using Frankfurter API (free)
     const convertPrices = async () => {
       if (sourceCurrency.value === settings.currency) return
-      
+
       isConverting.value = true
-      
+
       try {
         const response = await fetch(
           `https://api.frankfurter.app/latest?from=${sourceCurrency.value}&to=${settings.currency}`
         )
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate')
         }
-        
+
         const data = await response.json()
         const rate = data.rates[settings.currency]
-        
+
         if (!rate) {
           throw new Error('Exchange rate not available')
         }
-        
+
         conversionRate.value = rate
-        
+
         // Update all scanned items with converted prices
         scannedItems.value = scannedItems.value.map(item => ({
           ...item,
           convertedPrice: parseFloat((item.price * rate).toFixed(2))
         }))
-        
+
         showNotification(`Converted to ${settings.currency}`)
       } catch (error) {
         console.error('Conversion failed:', error)
@@ -539,7 +539,7 @@ export default {
 
     const addScannedItems = () => {
       const itemsToAdd = scannedItems.value.filter(item => item.selected)
-      
+
       itemsToAdd.forEach(item => {
         invoice.items.push({
           description: item.description,
