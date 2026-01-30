@@ -265,7 +265,8 @@ export default {
           pagebreak: { mode: 'avoid-all' }
         }
 
-        await html2pdf().set(opt).from(pdfContent || clone).toPdf().get('pdf').then((pdf) => {
+        // Use the clone (not just pdfContent) to preserve the template class for CSS inheritance
+        await html2pdf().set(opt).from(clone).toPdf().get('pdf').then((pdf) => {
           // Remove any extra pages
           while (pdf.internal.getNumberOfPages() > 1) {
             pdf.deletePage(pdf.internal.getNumberOfPages())
