@@ -172,6 +172,7 @@ export default {
             date: data.i?.d || new Date().toISOString().split('T')[0],
             dueDate: data.i?.dd || '',
             logo: data.i?.l || '',
+            initials: data.i?.ini || '', // fallback initials when logo is too large
             from: data.i?.f || { name: '', email: '', address: '' },
             to: data.i?.t || { name: '', email: '', address: '' },
             items: data.i?.it || [{ description: '', quantity: 1, price: 0, tax: 0 }],

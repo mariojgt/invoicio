@@ -66,6 +66,19 @@
   object-fit: contain;
 }
 
+.pdf-logo-initials {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+}
+
 .pdf-title-section {
   text-align: right;
 }
@@ -1041,6 +1054,19 @@ body {
   max-height: 50px;
 }
 
+.preview-logo-initials {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+}
+
 .preview-invoice-title {
   text-align: right;
 }
@@ -1968,6 +1994,26 @@ body {
   font-size: 0.9rem;
   margin-bottom: 16px;
   line-height: 1.5;
+}
+
+.share-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  color: #92400e;
+  line-height: 1.4;
+}
+
+.share-warning svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+  margin-top: 1px;
 }
 
 .share-link-container {
