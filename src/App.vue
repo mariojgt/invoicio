@@ -1,5 +1,13 @@
 <template>
-  <div class="app-container">
+  <!-- Client Portal View for Shared Invoices -->
+  <ClientPortal 
+    v-if="isSharedView"
+    :sharedInvoice="sharedInvoice" 
+    :sharedSettings="sharedSettings" 
+  />
+
+  <!-- Main App View -->
+  <div v-else class="app-container">
     <AppHeader
       @load="loadInvoice"
       @save="saveInvoice"
@@ -79,8 +87,9 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import html2pdf from 'html2pdf.js'
+import pako from 'pako'
 import { useInvoice } from './composables/useInvoice'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
@@ -96,6 +105,7 @@ import InvoiceHistory from './components/InvoiceHistory.vue'
 import Dashboard from './components/Dashboard.vue'
 import EmailTemplates from './components/EmailTemplates.vue'
 import PdfTemplate from './components/PdfTemplate.vue'
+import ClientPortal from './components/ClientPortal.vue'
 
 export default {
   name: 'App',
@@ -113,10 +123,16 @@ export default {
     InvoiceHistory,
     Dashboard,
     EmailTemplates,
-    PdfTemplate
+    PdfTemplate,
+    ClientPortal
   },
   setup() {
     const { invoice, settings, isGeneratingPDF, loadFromStorage, setupAutoSave } = useInvoice()
+
+    // Shared invoice state
+    const isSharedView = ref(false)
+    const sharedInvoice = reactive({})
+    const sharedSettings = reactive({})
 
     const showSettings = ref(false)
     const showClientDatabase = ref(false)
@@ -129,8 +145,64 @@ export default {
     const pdfTemplateRef = ref(null)
 
     onMounted(() => {
-      loadFromStorage()
-      setupAutoSave()
+      // Check for shared invoice in URL
+      const urlParams = new URLSearchParams(window.location.search)
+      const invParam = urlParams.get('inv')
+      
+      if (invParam) {
+        try {
+          // Decode the URL-safe base64
+          const base64 = invParam.replace(/-/g, '+').replace(/_/g, '/')
+          const padding = base64.length % 4 === 0 ? '' : '='.repeat(4 - (base64.length % 4))
+          const decoded = atob(base64 + padding)
+          
+          // Convert to Uint8Array
+          const bytes = new Uint8Array(decoded.length)
+          for (let i = 0; i < decoded.length; i++) {
+            bytes[i] = decoded.charCodeAt(i)
+          }
+          
+          // Decompress
+          const decompressed = pako.inflate(bytes, { to: 'string' })
+          const data = JSON.parse(decompressed)
+          
+          // Map shortened keys back to full names with defaults
+          Object.assign(sharedInvoice, {
+            number: data.i?.n || 'INV-001',
+            date: data.i?.d || new Date().toISOString().split('T')[0],
+            dueDate: data.i?.dd || '',
+            logo: data.i?.l || '',
+            from: data.i?.f || { name: '', email: '', address: '' },
+            to: data.i?.t || { name: '', email: '', address: '' },
+            items: data.i?.it || [{ description: '', quantity: 1, price: 0, tax: 0 }],
+            discountPercent: data.i?.dp || 0,
+            notes: data.i?.nt || '',
+            payment: data.i?.p || { method: 'none' }
+          })
+          
+          Object.assign(sharedSettings, {
+            template: data.s?.t || 'classic',
+            currency: data.s?.c || 'USD',
+            accentColor: data.s?.ac || '#4f46e5',
+            taxMode: data.s?.tm || 'total',
+            globalTaxRate: data.s?.gtr || 0,
+            showDiscount: data.s?.sd || false
+          })
+          
+          isSharedView.value = true
+          
+          // Update page title
+          document.title = `Invoice ${sharedInvoice.number || ''} | Invoicio`
+        } catch (err) {
+          console.error('Error parsing shared invoice:', err)
+          // If parsing fails, show normal app
+          loadFromStorage()
+          setupAutoSave()
+        }
+      } else {
+        loadFromStorage()
+        setupAutoSave()
+      }
     })
 
     const toggleSettings = () => {
@@ -289,6 +361,9 @@ export default {
     }
 
     return {
+      isSharedView,
+      sharedInvoice,
+      sharedSettings,
       showSettings,
       showClientDatabase,
       showItemCatalog,
