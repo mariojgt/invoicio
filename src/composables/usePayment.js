@@ -11,27 +11,27 @@ export function usePayment() {
     const p = invoice.payment
     switch (p.method) {
       case 'bank':
-        return p.bankName || p.accountName || p.accountNumber
+        return !!(p.bankName || p.accountName || p.accountNumber)
       case 'paypal':
-        return p.paypalEmail
+        return !!p.paypalEmail
       case 'crypto':
-        return p.cryptoAddress
+        return !!p.cryptoAddress
       case 'wire':
-        return p.wireBankName || p.wireAccountNumber
+        return !!(p.wireBankName || p.wireAccountNumber)
       case 'qrcode':
-        return p.qrCodeData || p.qrCodeImage
+        return !!(p.qrCodeData || p.qrCodeImage)
       case 'stripe':
-        return p.stripeLink
+        return !!p.stripeLink
       case 'venmo':
-        return p.venmoUsername
+        return !!p.venmoUsername
       case 'zelle':
-        return p.zelleEmail || p.zellePhone
+        return !!(p.zelleEmail || p.zellePhone)
       case 'cashapp':
-        return p.cashAppTag
+        return !!p.cashAppTag
       case 'wise':
-        return p.wiseEmail
+        return !!p.wiseEmail
       case 'other':
-        return p.instructions
+        return !!p.instructions
       case 'card':
       case 'cash':
         return true

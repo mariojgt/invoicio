@@ -223,62 +223,70 @@ export default {
       isGeneratingPDF.value = true
 
       try {
-        const original = pdfTemplateRef.value.$refs.pdfRef
-        const clone = original.cloneNode(true)
+        const wrapper = pdfTemplateRef.value.$refs.pdfRef
+        const templateElement = wrapper.firstElementChild
 
+        if (!templateElement) {
+          throw new Error('Template element not found')
+        }
+
+        // Clone the template element
+        const clone = templateElement.cloneNode(true)
         clone.style.position = 'fixed'
         clone.style.left = '0'
         clone.style.top = '0'
         clone.style.zIndex = '99999'
         clone.style.background = 'white'
-        clone.style.width = '595px'
 
         document.body.appendChild(clone)
-
         await new Promise(resolve => setTimeout(resolve, 300))
-
-        const pdfContent = clone.querySelector('.pdf-page')
-        if (pdfContent) {
-          pdfContent.style.width = '595px'
-          pdfContent.style.height = '842px'
-          pdfContent.style.overflow = 'hidden'
-        }
 
         const opt = {
           margin: 0,
           filename: `${invoice.number || 'invoice'}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
+          image: { type: 'png', quality: 1.0 },
           html2canvas: {
             scale: 2,
             useCORS: true,
             logging: false,
+            letterRendering: true,
+            allowTaint: false,
             backgroundColor: '#ffffff',
+            dpi: 300,
             width: 595,
             height: 842,
-            windowWidth: 595
+            windowWidth: 595,
+            windowHeight: 842,
+            imageTimeout: 0
           },
           jsPDF: {
             unit: 'pt',
             format: [595.28, 841.89],
-            orientation: 'portrait'
+            orientation: 'portrait',
+            compress: false
           },
           pagebreak: { mode: 'avoid-all' }
         }
 
-        await html2pdf().set(opt).from(pdfContent || clone).toPdf().get('pdf').then((pdf) => {
+        await html2pdf().set(opt).from(clone).toPdf().get('pdf').then((pdf) => {
           // Remove any extra pages
           while (pdf.internal.getNumberOfPages() > 1) {
             pdf.deletePage(pdf.internal.getNumberOfPages())
           }
         }).save()
 
-        document.body.removeChild(clone)
+        // Cleanup
+        if (document.body.contains(clone)) {
+          document.body.removeChild(clone)
+        }
       } catch (error) {
         console.error('Error generating PDF:', error)
         alert('Error generating PDF. Please try again.')
-        const clones = document.querySelectorAll('.pdf-template')
+
+        // Cleanup on error
+        const clones = document.querySelectorAll('[style*="position: fixed"][style*="z-index: 99999"]')
         clones.forEach(c => {
-          if (c.style.position === 'fixed') {
+          if (document.body.contains(c)) {
             document.body.removeChild(c)
           }
         })
