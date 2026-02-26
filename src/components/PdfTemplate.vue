@@ -186,6 +186,7 @@
 <script>
 import { ref, computed } from 'vue'
 import { useInvoice } from '../composables/useInvoice'
+import { currencies } from '../composables/constants'
 
 export default {
   name: 'PdfTemplate',
@@ -307,7 +308,12 @@ export default {
     }
 
     const formatCurrency = (amount) => {
-      const currency = displaySettings.value?.currency || 'USD'
+      let currency = displaySettings.value?.currency || 'USD'
+      // If currency is a symbol instead of an ISO code, resolve it
+      if (currency.length > 3 || !/^[A-Z]{3}$/.test(currency)) {
+        const match = Object.entries(currencies).find(([, v]) => v.symbol === currency)
+        currency = match ? match[0] : 'USD'
+      }
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency

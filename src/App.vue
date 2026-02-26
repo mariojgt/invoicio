@@ -91,6 +91,7 @@ import { ref, reactive, onMounted } from 'vue'
 import html2pdf from 'html2pdf.js'
 import pako from 'pako'
 import { useInvoice } from './composables/useInvoice'
+import { currencies } from './composables/constants'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import InvoiceDetails from './components/InvoiceDetails.vue'
@@ -183,7 +184,7 @@ export default {
           
           Object.assign(sharedSettings, {
             template: data.s?.t || 'classic',
-            currency: data.s?.c || 'USD',
+            currency: (data.s?.c && currencies[data.s.c]) ? data.s.c : 'USD',
             accentColor: data.s?.ac || '#4f46e5',
             taxMode: data.s?.tm || 'total',
             globalTaxRate: data.s?.gtr || 0,

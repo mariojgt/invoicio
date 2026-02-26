@@ -40,7 +40,13 @@ export function useInvoice() {
       Object.assign(invoice, JSON.parse(savedInvoice))
     }
     if (savedSettings) {
-      Object.assign(settings, JSON.parse(savedSettings))
+      const parsed = JSON.parse(savedSettings)
+      // Validate currency is a known ISO code, not a symbol
+      if (parsed.currency && !currencies[parsed.currency]) {
+        const match = Object.entries(currencies).find(([, v]) => v.symbol === parsed.currency)
+        parsed.currency = match ? match[0] : 'USD'
+      }
+      Object.assign(settings, parsed)
     }
     if (savedClients) {
       clients.value = JSON.parse(savedClients)
