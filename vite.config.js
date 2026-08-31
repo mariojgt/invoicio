@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// Self-hosted builds serve from the root; GitHub Pages sets BASE_PATH=/invoicio/
+// Serves from the root by default; set BASE_PATH to host under a subpath
 export default defineConfig({
   plugins: [vue()],
   base: process.env.BASE_PATH || '/',
