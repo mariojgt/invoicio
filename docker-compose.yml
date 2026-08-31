@@ -1,0 +1,19 @@
+services:
+  invoicio:
+    build: .
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    environment:
+      # Login credentials for the web UI — CHANGE THESE
+      AUTH_USERNAME: ${AUTH_USERNAME:-admin}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:-invoicio}
+      # Keeps sessions valid across restarts (any long random string)
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      # Bearer token for the MCP endpoint at /mcp (unset = MCP disabled)
+      MCP_TOKEN: ${MCP_TOKEN:-}
+    volumes:
+      - invoicio-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  invoicio-data:

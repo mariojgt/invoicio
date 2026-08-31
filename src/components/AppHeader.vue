@@ -1,7 +1,7 @@
 <template>
   <header class="header" role="banner">
     <div class="header-logo">
-      <a href="/invoicio/" aria-label="Invoicio - Free Invoice Generator">
+      <a :href="baseUrl" aria-label="Invoicio - Free Invoice Generator">
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect width="100" height="100" rx="12" fill="currentColor"/>
           <text x="50" y="68" font-family="Arial" font-size="55" font-weight="bold" fill="white" text-anchor="middle">I</text>
@@ -74,6 +74,14 @@
         </svg>
         Settings
       </button>
+      <button class="btn btn-secondary" @click="$emit('logout')" aria-label="Sign out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </button>
     </nav>
   </header>
 </template>
@@ -81,6 +89,11 @@
 <script>
 export default {
   name: 'AppHeader',
-  emits: ['load', 'save', 'toggle-settings', 'open-clients', 'open-catalog', 'open-history', 'open-dashboard', 'open-templates']
+  emits: ['load', 'save', 'toggle-settings', 'open-clients', 'open-catalog', 'open-history', 'open-dashboard', 'open-templates', 'logout'],
+  computed: {
+    baseUrl() {
+      return import.meta.env.BASE_URL
+    }
+  }
 }
 </script>

@@ -1,11 +1,18 @@
 import { savedInvoices, invoice, settings } from './state'
+import { fetchInvoicesRemote, upsertInvoiceRemote, deleteInvoiceRemote, importInvoicesRemote } from './useApi'
 
 /**
  * Saved Invoices Functions
  * Save, load, and manage invoice history
+ * The in-memory list mirrors the server database: every mutation
+ * is pushed to the API in the background.
  */
 
 export function useSavedInvoices(grandTotal) {
+  const refreshSavedInvoices = async () => {
+    savedInvoices.value = await fetchInvoicesRemote()
+  }
+
   const saveCurrentInvoice = (name) => {
     const invoiceName = name || `Invoice ${invoice.number} - ${new Date().toLocaleDateString()}`
     const newSavedInvoice = {
@@ -21,6 +28,7 @@ export function useSavedInvoices(grandTotal) {
       data: JSON.parse(JSON.stringify(invoice))
     }
     savedInvoices.value.unshift(newSavedInvoice)
+    upsertInvoiceRemote(newSavedInvoice)
     return newSavedInvoice
   }
 
@@ -47,6 +55,7 @@ export function useSavedInvoices(grandTotal) {
         dueDate: invoice.dueDate,
         data: JSON.parse(JSON.stringify(invoice))
       }
+      upsertInvoiceRemote(savedInvoices.value[index])
       return true
     }
     return false
@@ -59,6 +68,7 @@ export function useSavedInvoices(grandTotal) {
       if (savedInvoices.value[index].data) {
         savedInvoices.value[index].data.status = newStatus
       }
+      upsertInvoiceRemote(savedInvoices.value[index])
       return true
     }
     return false
@@ -68,6 +78,7 @@ export function useSavedInvoices(grandTotal) {
     const index = savedInvoices.value.findIndex(inv => inv.id === id)
     if (index !== -1) {
       savedInvoices.value.splice(index, 1)
+      deleteInvoiceRemote(id)
       return true
     }
     return false
@@ -77,6 +88,7 @@ export function useSavedInvoices(grandTotal) {
     const index = savedInvoices.value.findIndex(inv => inv.id === id)
     if (index !== -1) {
       savedInvoices.value[index].name = newName
+      upsertInvoiceRemote(savedInvoices.value[index])
       return true
     }
     return false
@@ -93,6 +105,7 @@ export function useSavedInvoices(grandTotal) {
       }
       delete duplicate.updatedAt
       savedInvoices.value.unshift(duplicate)
+      upsertInvoiceRemote(duplicate)
       return duplicate
     }
     return null
@@ -139,6 +152,9 @@ export function useSavedInvoices(grandTotal) {
         })
       }
 
+      // Push the resulting list to the server ('replace' clears it first)
+      importInvoicesRemote(JSON.parse(JSON.stringify(savedInvoices.value)), mode)
+
       return { success: true, count: importedInvoices.length }
     } catch (error) {
       console.error('Invoices import failed:', error)
@@ -165,6 +181,7 @@ export function useSavedInvoices(grandTotal) {
 
   return {
     savedInvoices,
+    refreshSavedInvoices,
     saveCurrentInvoice,
     loadSavedInvoice,
     updateSavedInvoice,

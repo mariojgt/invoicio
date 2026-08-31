@@ -23,6 +23,7 @@ import { useCatalog } from './useCatalog'
 import { useSavedInvoices } from './useSavedInvoices'
 import { useCurrency } from './useCurrency'
 import { usePayment } from './usePayment'
+import { importInvoicesRemote } from './useApi'
 
 /**
  * Main Invoice Composable
@@ -54,11 +55,8 @@ export function useInvoice() {
     if (savedCatalog) {
       catalogItems.value = JSON.parse(savedCatalog)
     }
-
-    const savedInvoicesData = localStorage.getItem('invoicio-saved-invoices')
-    if (savedInvoicesData) {
-      savedInvoices.value = JSON.parse(savedInvoicesData)
-    }
+    // Saved invoices live in the server database, not localStorage —
+    // they are loaded via refreshSavedInvoices() after login.
   }
 
   // Auto-save watchers
@@ -77,10 +75,6 @@ export function useInvoice() {
 
     watch(catalogItems, () => {
       localStorage.setItem('invoicio-catalog', JSON.stringify(catalogItems.value))
-    }, { deep: true })
-
-    watch(savedInvoices, () => {
-      localStorage.setItem('invoicio-saved-invoices', JSON.stringify(savedInvoices.value))
     }, { deep: true })
   }
 
@@ -230,10 +224,11 @@ export function useInvoice() {
         counts.catalogItems = imported.catalogItems.length
       }
 
-      // Import saved invoices
+      // Import saved invoices (full replace, mirrored to the server)
       if (Array.isArray(imported.savedInvoices)) {
         savedInvoices.value = imported.savedInvoices
         counts.savedInvoices = imported.savedInvoices.length
+        importInvoicesRemote(JSON.parse(JSON.stringify(imported.savedInvoices)), 'replace')
       }
 
       // Import email templates
@@ -329,6 +324,7 @@ export function useInvoice() {
 
     // Saved Invoices (from useSavedInvoices)
     savedInvoices,
+    refreshSavedInvoices: savedInvoiceFunctions.refreshSavedInvoices,
     saveCurrentInvoice: savedInvoiceFunctions.saveCurrentInvoice,
     loadSavedInvoice: savedInvoiceFunctions.loadSavedInvoice,
     updateSavedInvoice: savedInvoiceFunctions.updateSavedInvoice,

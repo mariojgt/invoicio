@@ -6,6 +6,14 @@
     :sharedSettings="sharedSettings" 
   />
 
+  <!-- Checking session -->
+  <div v-else-if="authState === 'checking'" class="auth-loading" aria-busy="true">
+    <div class="auth-loading-spinner"></div>
+  </div>
+
+  <!-- Login Screen -->
+  <LoginScreen v-else-if="authState === 'anon'" @success="initApp" />
+
   <!-- Main App View -->
   <div v-else class="app-container">
     <AppHeader
@@ -17,6 +25,7 @@
       @open-history="showInvoiceHistory = true"
       @open-dashboard="showDashboard = true"
       @open-templates="showEmailTemplates = true"
+      @logout="handleLogout"
     />
 
     <main class="main-content">
@@ -87,11 +96,13 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import html2pdf from 'html2pdf.js'
 import pako from 'pako'
 import { useInvoice } from './composables/useInvoice'
+import { checkAuth, logout } from './composables/useApi'
 import { currencies } from './composables/constants'
+import LoginScreen from './components/LoginScreen.vue'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import InvoiceDetails from './components/InvoiceDetails.vue'
@@ -125,10 +136,14 @@ export default {
     Dashboard,
     EmailTemplates,
     PdfTemplate,
-    ClientPortal
+    ClientPortal,
+    LoginScreen
   },
   setup() {
-    const { invoice, settings, isGeneratingPDF, loadFromStorage, setupAutoSave } = useInvoice()
+    const { invoice, settings, isGeneratingPDF, loadFromStorage, setupAutoSave, refreshSavedInvoices } = useInvoice()
+
+    // Auth state: 'checking' | 'anon' | 'authed'
+    const authState = ref('checking')
 
     // Shared invoice state
     const isSharedView = ref(false)
@@ -144,6 +159,43 @@ export default {
     const loadInput = ref(null)
     const settingsInput = ref(null)
     const pdfTemplateRef = ref(null)
+
+    // Called after a valid session is confirmed (or right after login)
+    const initApp = async () => {
+      loadFromStorage()
+      setupAutoSave()
+      authState.value = 'authed'
+      try {
+        await refreshSavedInvoices()
+      } catch (err) {
+        console.error('Failed to load invoices from server:', err)
+      }
+    }
+
+    const startAuthFlow = async () => {
+      if (await checkAuth()) {
+        initApp()
+      } else {
+        authState.value = 'anon'
+      }
+    }
+
+    const handleLogout = async () => {
+      try {
+        await logout()
+      } catch (err) {
+        console.error('Logout failed:', err)
+      }
+      authState.value = 'anon'
+    }
+
+    // Refresh from the server when opening history/dashboard so invoices
+    // created via MCP tools show up without a page reload
+    watch([showInvoiceHistory, showDashboard], ([history, dashboard]) => {
+      if ((history || dashboard) && authState.value === 'authed') {
+        refreshSavedInvoices().catch(() => {})
+      }
+    })
 
     onMounted(() => {
       // Check for shared invoice in URL
@@ -197,13 +249,11 @@ export default {
           document.title = `Invoice ${sharedInvoice.number || ''} | Invoicio`
         } catch (err) {
           console.error('Error parsing shared invoice:', err)
-          // If parsing fails, show normal app
-          loadFromStorage()
-          setupAutoSave()
+          // If parsing fails, show normal app (behind login)
+          startAuthFlow()
         }
       } else {
-        loadFromStorage()
-        setupAutoSave()
+        startAuthFlow()
       }
     })
 
@@ -366,6 +416,9 @@ export default {
       isSharedView,
       sharedInvoice,
       sharedSettings,
+      authState,
+      initApp,
+      handleLogout,
       showSettings,
       showClientDatabase,
       showItemCatalog,
